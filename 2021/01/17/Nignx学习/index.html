@@ -22,28 +22,35 @@
     var CONFIG = {"hostname":"example.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
-  <meta property="og:type" content="website">
-<meta property="og:title" content="松山之路">
-<meta property="og:url" content="http://example.com/index.html">
+  <meta name="description" content="1.传统项目生命周期123451.调研阶段2.设计阶段3.开发阶段4.测试阶段5.运营阶段    阶段 目的 人员 节点    调研阶段 需求可行性 产品经理 角度、思路、方案，老板拍板   设计阶段 方案可视化 产品团队主导，开发测试运维参与 产品需求文档、项目里程碑   开发阶段 方案运行 开发团队为主，运维团队参与 阶段项目正常运行   测试阶段 保证功能完善 运维、开发参与 项目功能复">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Nginx">
+<meta property="og:url" content="http://example.com/2021/01/17/Nignx%E5%AD%A6%E4%B9%A0/index.html">
 <meta property="og:site_name" content="松山之路">
+<meta property="og:description" content="1.传统项目生命周期123451.调研阶段2.设计阶段3.开发阶段4.测试阶段5.运营阶段    阶段 目的 人员 节点    调研阶段 需求可行性 产品经理 角度、思路、方案，老板拍板   设计阶段 方案可视化 产品团队主导，开发测试运维参与 产品需求文档、项目里程碑   开发阶段 方案运行 开发团队为主，运维团队参与 阶段项目正常运行   测试阶段 保证功能完善 运维、开发参与 项目功能复">
 <meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="c:/Users/zhahongsheng/AppData/Roaming/Typora/typora-user-images/image-20201225171608660.png">
+<meta property="article:published_time" content="2021-01-17T08:11:05.000Z">
+<meta property="article:modified_time" content="2021-01-17T11:58:02.923Z">
 <meta property="article:author" content="和时间赛跑">
+<meta property="article:tag" content="Nginx">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="c:/Users/zhahongsheng/AppData/Roaming/Typora/typora-user-images/image-20201225171608660.png">
 
-<link rel="canonical" href="http://example.com/">
+<link rel="canonical" href="http://example.com/2021/01/17/Nignx%E5%AD%A6%E4%B9%A0/">
 
 
 <script id="page-configurations">
   // https://hexo.io/docs/variables.html
   CONFIG.page = {
     sidebar: "",
-    isHome : true,
-    isPost : false,
+    isHome : false,
+    isPost : true,
     lang   : 'zh-CN'
   };
 </script>
 
-  <title>松山之路</title>
+  <title>Nginx | 松山之路</title>
   
 
 
@@ -180,236 +187,10 @@
         <div class="content-wrap">
           
 
-          <div class="content index posts-expand">
+          <div class="content post posts-expand">
             
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2021/01/17/Nginx%E9%9B%86%E7%BE%A4%E9%83%A8%E7%BD%B2/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/timg.jpg">
-      <meta itemprop="name" content="和时间赛跑">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="松山之路">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/01/17/Nginx%E9%9B%86%E7%BE%A4%E9%83%A8%E7%BD%B2/" class="post-title-link" itemprop="url">使用Nginx配合Tomcat对单体web项目集群部署配置</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：2021-01-17 16:11:05 / 修改时间：19:50:44" itemprop="dateCreated datePublished" datetime="2021-01-17T16:11:05+08:00">2021-01-17</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E5%89%8D%E7%AB%AF/" itemprop="url" rel="index"><span itemprop="name">前端</span></a>
-                </span>
-                  ，
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E5%89%8D%E7%AB%AF/Nginx/" itemprop="url" rel="index"><span itemprop="name">Nginx</span></a>
-                </span>
-            </span>
-
-          
-  
-  <span class="post-meta-item">
-    
-      <span class="post-meta-item-icon">
-        <i class="far fa-comment"></i>
-      </span>
-      <span class="post-meta-item-text">Valine：</span>
-    
-    <a title="valine" href="/2021/01/17/Nginx%E9%9B%86%E7%BE%A4%E9%83%A8%E7%BD%B2/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/2021/01/17/Nginx%E9%9B%86%E7%BE%A4%E9%83%A8%E7%BD%B2/" itemprop="commentCount"></span>
-    </a>
-  </span>
-  
-  <br>
-            <span class="post-meta-item" title="本文字数">
-              <span class="post-meta-item-icon">
-                <i class="far fa-file-word"></i>
-              </span>
-                <span class="post-meta-item-text">本文字数：</span>
-              <span>1.7k</span>
-            </span>
-            <span class="post-meta-item" title="阅读时长">
-              <span class="post-meta-item-icon">
-                <i class="far fa-clock"></i>
-              </span>
-                <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>2 分钟</span>
-            </span>
-
-        </div>
-      </header>
 
     
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>本文主要介绍如何使用Nginx对单体web引用进行集群部署！</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2021/01/17/Nginx%E9%9B%86%E7%BE%A4%E9%83%A8%E7%BD%B2/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2021/01/17/SpringBoot2.0%E5%AD%A6%E4%B9%A0/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/timg.jpg">
-      <meta itemprop="name" content="和时间赛跑">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="松山之路">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/01/17/SpringBoot2.0%E5%AD%A6%E4%B9%A0/" class="post-title-link" itemprop="url">SpringBoot2.0</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：2021-01-17 16:11:05 / 修改时间：19:55:29" itemprop="dateCreated datePublished" datetime="2021-01-17T16:11:05+08:00">2021-01-17</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E5%90%8E%E7%AB%AF/" itemprop="url" rel="index"><span itemprop="name">后端</span></a>
-                </span>
-                  ，
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E5%90%8E%E7%AB%AF/SpringBoot/" itemprop="url" rel="index"><span itemprop="name">SpringBoot</span></a>
-                </span>
-            </span>
-
-          
-  
-  <span class="post-meta-item">
-    
-      <span class="post-meta-item-icon">
-        <i class="far fa-comment"></i>
-      </span>
-      <span class="post-meta-item-text">Valine：</span>
-    
-    <a title="valine" href="/2021/01/17/SpringBoot2.0%E5%AD%A6%E4%B9%A0/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/2021/01/17/SpringBoot2.0%E5%AD%A6%E4%B9%A0/" itemprop="commentCount"></span>
-    </a>
-  </span>
-  
-  <br>
-            <span class="post-meta-item" title="本文字数">
-              <span class="post-meta-item-icon">
-                <i class="far fa-file-word"></i>
-              </span>
-                <span class="post-meta-item-text">本文字数：</span>
-              <span>954</span>
-            </span>
-            <span class="post-meta-item" title="阅读时长">
-              <span class="post-meta-item-icon">
-                <i class="far fa-clock"></i>
-              </span>
-                <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>1 分钟</span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <a id="more"></a>
-<h2 id="SpringBoot引入"><a href="#SpringBoot引入" class="headerlink" title="SpringBoot引入"></a>SpringBoot引入</h2><h3 id="1-为什么要用SpringBoot"><a href="#1-为什么要用SpringBoot" class="headerlink" title="1 为什么要用SpringBoot"></a>1 为什么要用SpringBoot</h3><p>传统项目：整合SSH或者SSM，考虑配置文件、Jar冲突问题、整合起来繁琐</p>
-<p>​        打包方式：打包成一个war放入Tomcatwebapp目录下进行执行</p>
-<p>SpringBoot是一个快速开发框架，能够帮助我们快速整合第三方框架（Maven依赖关系##Maven继承），<strong>完全采用注解化</strong>，简化XML配置。内置嵌入Http服务器（Tomcat、Jetty），默认嵌入Tomcat服务器。<strong>最终Java应用程序进行执行。</strong></p>
-<p>核心：第三方框架</p>
-<p>​    原理（Maven依赖关系##Maven继承）</p>
-<p>​    完全采用注解化，在Spring3.0之后采用注解方式启动SpringMVC、内置嵌入Http服务器、Java 创建Tomcat</p>
-<h3 id="2-SpringBoot与SpringCloud关系"><a href="#2-SpringBoot与SpringCloud关系" class="headerlink" title="2 SpringBoot与SpringCloud关系"></a>2 SpringBoot与SpringCloud关系</h3><ol>
-<li>SpringBoot其实就是一个快速开发框架，能够帮助我们快速整合<strong>（第三方常用框架），完全采用注解化、简化XML配置、最终以Java应用程序进行执行。</strong></li>
-<li>SpringCloud是一套<strong>目前</strong>完整微服务框架，功能非常强大。注册中心、客户端调用工具、服务治理（负载均衡、断路器、<strong>分布式配置中心。网关、服务链路等</strong>）、</li>
-<li>SpringBoot不是微服务框架</li>
-</ol>
-<p>微服务通讯技术Http+json（restful）轻量级</p>
-<p>SpringBoot：Web组件默认集成SpringMVC，SpringCloud依赖于SpringBoot实现微服务，使用SpringMVC编写服务接口</p>
-<p>微服务开发：RPC远程通讯技术、服务治理</p>
-<p>核心区别：SpringCloud 微服务框架，单纯的知识集成Springboot实现快速开发</p>
-<h3 id="3-SpringBoot与SpringMVC关系"><a href="#3-SpringBoot与SpringMVC关系" class="headerlink" title="3 SpringBoot与SpringMVC关系"></a>3 SpringBoot与SpringMVC关系</h3><ol>
-<li>SpringBoot Web组件集成SpringMVC框架，但是SpringBoot启动SpringMVC的时候没有传统配置文件，那么是如何启动的？</li>
-<li>SpringMVC3.0之后支持注解方式启动SpringMVC（使用Java代码启动SpringMVC）</li>
-<li>SpringBoot十一个快速开发框架，帮助我们快速的整合第三方常用使用框架（Maven集成方式），完全采用注解化（使用注解方式启动SpringMVC），简化XML，内置Http服务器（Tomcat、Jetty）、<strong>最终是以Java应用程序执行。</strong></li>
-</ol>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
@@ -425,10 +206,9 @@
       <meta itemprop="name" content="松山之路">
     </span>
       <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/01/17/Nignx%E5%AD%A6%E4%B9%A0/" class="post-title-link" itemprop="url">Nginx</a>
-        </h2>
+        <h1 class="post-title" itemprop="name headline">
+          Nginx
+        </h1>
 
         <div class="post-meta">
             <span class="post-meta-item">
@@ -455,6 +235,13 @@
             </span>
 
           
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="本文总阅读数"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
   
   <span class="post-meta-item">
     
@@ -493,7 +280,7 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <a id="more"></a>
+        <a id="more"></a>
 
 <h3 id="1-传统项目生命周期"><a href="#1-传统项目生命周期" class="headerlink" title="1.传统项目生命周期"></a>1.传统项目生命周期</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">1.调研阶段</span><br><span class="line">2.设计阶段</span><br><span class="line">3.开发阶段</span><br><span class="line">4.测试阶段</span><br><span class="line">5.运营阶段</span><br></pre></td></tr></table></figure>
 <table>
@@ -559,197 +346,63 @@
 <h3 id="项目开发环境"><a href="#项目开发环境" class="headerlink" title="项目开发环境"></a>项目开发环境</h3><p>在一个项目开发过程中一般会涉及到以下五个环境：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line">个人开发环境：</span><br><span class="line">	工作人员：自己</span><br><span class="line">	工作平台：个人笔记本、公司配备的电脑</span><br><span class="line">	工作特点：环境是自己配置的，团队中额不同的个人环境可以不一样</span><br><span class="line">	工作内容：项目的子模块、子功能</span><br><span class="line">	完成标准：完成领导安排的内容</span><br><span class="line">	</span><br><span class="line">公司开发环境：</span><br><span class="line">	工作人员：开发团队</span><br><span class="line">	工作平台：公司内部服务器</span><br><span class="line">	工作特点：服务器环境和线上环境完全一致</span><br><span class="line">	工作内容：项目子模块间的功能联调</span><br><span class="line">	完成标准：项目阶段开发、测试完成</span><br><span class="line">	</span><br><span class="line">项目测试环境：</span><br><span class="line">	工作人员：测试团队</span><br><span class="line">	工作平台：公司内部服务器</span><br><span class="line">	工作特点：服务器环境和线上环境完全一致</span><br><span class="line">	工作内容：项目功能、非功能、探索等测试</span><br><span class="line">	完成标准：项目阶段功能正常运行</span><br><span class="line">	</span><br><span class="line">项目预发布环境：</span><br><span class="line">	工作人员：运维团队</span><br><span class="line">	工作平台：公司线上服务器组中的一台</span><br><span class="line">	工作特点：服务器环境和线上环境完全一致</span><br><span class="line">	工作内容：特殊功能测试（支付）、压力测试、安全测试</span><br><span class="line">	完成标准：项目阶段功能正常运行，最后一道防线</span><br><span class="line">	</span><br><span class="line">项目线上环境：</span><br><span class="line">	工作人员：运维团队</span><br><span class="line">	工作平台：公司线上服务器组</span><br><span class="line">	工作特点：标准线上服务器环境</span><br><span class="line">	工作内容：代码部署和维护</span><br><span class="line">	完成标准：项目正常运行</span><br></pre></td></tr></table></figure>
 
-      
     </div>
 
     
     
     
+        <div class="reward-container">
+  <div>如果喜欢的话，打赏一下吧！</div>
+  <button onclick="var qr = document.getElementById('qr'); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    打赏
+  </button>
+  <div id="qr" style="display: none;">
+      
+      <div style="display: inline-block;">
+        <img src="/images/wechatpay.png" alt="和时间赛跑 微信支付">
+        <p>微信支付</p>
+      </div>
+      
+      <div style="display: inline-block;">
+        <img src="/images/alipay.png" alt="和时间赛跑 支付宝">
+        <p>支付宝</p>
+      </div>
+
+  </div>
+</div>
+
+
       <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
+          <div class="post-tags">
+              <a href="/tags/Nginx/" rel="tag"># Nginx</a>
+          </div>
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2021/01/17/%E5%B9%B6%E5%8F%91%E4%B8%AD%E7%9A%84%E5%8F%98%E9%87%8F%E5%8F%AF%E8%A7%81%E6%80%A7%E9%97%AE%E9%A2%98/">
+        
 
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/timg.jpg">
-      <meta itemprop="name" content="和时间赛跑">
-      <meta itemprop="description" content="">
-    </span>
 
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="松山之路">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/01/17/%E5%B9%B6%E5%8F%91%E4%B8%AD%E7%9A%84%E5%8F%98%E9%87%8F%E5%8F%AF%E8%A7%81%E6%80%A7%E9%97%AE%E9%A2%98/" class="post-title-link" itemprop="url">并发中变量可见性</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：2021-01-17 12:11:05 / 修改时间：19:56:30" itemprop="dateCreated datePublished" datetime="2021-01-17T12:11:05+08:00">2021-01-17</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E5%90%8E%E7%AB%AF/" itemprop="url" rel="index"><span itemprop="name">后端</span></a>
-                </span>
-            </span>
-
-          
-  
-  <span class="post-meta-item">
-    
-      <span class="post-meta-item-icon">
-        <i class="far fa-comment"></i>
-      </span>
-      <span class="post-meta-item-text">Valine：</span>
-    
-    <a title="valine" href="/2021/01/17/%E5%B9%B6%E5%8F%91%E4%B8%AD%E7%9A%84%E5%8F%98%E9%87%8F%E5%8F%AF%E8%A7%81%E6%80%A7%E9%97%AE%E9%A2%98/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/2021/01/17/%E5%B9%B6%E5%8F%91%E4%B8%AD%E7%9A%84%E5%8F%98%E9%87%8F%E5%8F%AF%E8%A7%81%E6%80%A7%E9%97%AE%E9%A2%98/" itemprop="commentCount"></span>
-    </a>
-  </span>
-  
-  <br>
-            <span class="post-meta-item" title="本文字数">
-              <span class="post-meta-item-icon">
-                <i class="far fa-file-word"></i>
-              </span>
-                <span class="post-meta-item-text">本文字数：</span>
-              <span>639</span>
-            </span>
-            <span class="post-meta-item" title="阅读时长">
-              <span class="post-meta-item-icon">
-                <i class="far fa-clock"></i>
-              </span>
-                <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>1 分钟</span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p><img src="R:\Temp\TMP\1584879219560.png" alt="1584879219560"></p>
-<h1 id="并发中的变量的可见性问题"><a href="#并发中的变量的可见性问题" class="headerlink" title="并发中的变量的可见性问题"></a>并发中的变量的可见性问题</h1><blockquote>
-<h2 id="问题1：变量分为哪几类"><a href="#问题1：变量分为哪几类" class="headerlink" title="问题1：变量分为哪几类"></a>问题1：变量分为哪几类</h2><blockquote>
-<ol>
-<li>全局变量</li>
-<li>局部变量</li>
-</ol>
-</blockquote>
-<h2 id="问题2：如何在多个线程间共享数据"><a href="#问题2：如何在多个线程间共享数据" class="headerlink" title="问题2：如何在多个线程间共享数据"></a>问题2：如何在多个线程间共享数据</h2><blockquote>
-<p>用全局变量：静态变量，或者共享对象</p>
-</blockquote>
-<h2 id="问题三：一个变量在线程1中被改变值了，在线程2中能看到该变量的最新值吗？"><a href="#问题三：一个变量在线程1中被改变值了，在线程2中能看到该变量的最新值吗？" class="headerlink" title="问题三：一个变量在线程1中被改变值了，在线程2中能看到该变量的最新值吗？"></a>问题三：一个变量在线程1中被改变值了，在线程2中能看到该变量的最新值吗？</h2><h2 id="怎样才能保证可以看到最新值？"><a href="#怎样才能保证可以看到最新值？" class="headerlink" title="怎样才能保证可以看到最新值？"></a>怎样才能保证可以看到最新值？</h2><blockquote>
-<p>方式一：synchronized（同步关键字，使用的时候加）</p>
-<p>方式二：volatile（定义的时候加）</p>
-</blockquote>
-</blockquote>
-<blockquote>
-<h2 id="线程："><a href="#线程：" class="headerlink" title="线程："></a>线程：</h2><blockquote>
-<ul>
-<li>守护线程</li>
-<li>非守护线程</li>
-</ul>
-</blockquote>
-<h2 id="创建线程有几种方式？"><a href="#创建线程有几种方式？" class="headerlink" title="创建线程有几种方式？"></a>创建线程有几种方式？</h2><blockquote>
-<ul>
-<li>runable</li>
-<li>callable</li>
-<li>Thread t = new Thread(runable）</li>
-</ul>
-</blockquote>
-</blockquote>
-<h1 id="Java内存模型"><a href="#Java内存模型" class="headerlink" title="Java内存模型"></a>Java内存模型</h1><blockquote>
-<h2 id="Java内存模型及操作规范"><a href="#Java内存模型及操作规范" class="headerlink" title="Java内存模型及操作规范"></a>Java内存模型及操作规范</h2><blockquote>
-<ul>
-<li>共享变量必须存放在主内存中</li>
-<li>现场有自己的工作内存，线程只可操作自己的工作内存</li>
-<li>线程要操作共享变量，需要从主内存中读取到工作内存，改变值后需要从工作内存中同步到朱北村中</li>
-</ul>
-</blockquote>
-</blockquote>
-<blockquote>
-<p><img src="C:\Users\zhahongsheng\Documents\1584882177504.png" alt="1584882177504"></p>
-</blockquote>
-<blockquote>
-<h2 id="Java内存模式会带来什么问题"><a href="#Java内存模式会带来什么问题" class="headerlink" title="Java内存模式会带来什么问题"></a>Java内存模式会带来什么问题</h2></blockquote>
-<h2 id="Java内存模型-同步交互协议，规定的八种原子操作："><a href="#Java内存模型-同步交互协议，规定的八种原子操作：" class="headerlink" title="Java内存模型-同步交互协议，规定的八种原子操作："></a>Java内存模型-同步交互协议，规定的八种原子操作：</h2><blockquote>
-<p>lock（锁定）：将主内存中的变量锁定，为一个线程所独占</p>
-<p>unlock（解锁）：将lock加的锁解除，此时其他的线程可以有机会访问此变量</p>
-<p>read（读取）：作用于主内存变量，将主内存中的变量值读到</p>
-</blockquote>
-<h2 id="Java内存模型-同步交互协议，操作规范"><a href="#Java内存模型-同步交互协议，操作规范" class="headerlink" title="Java内存模型-同步交互协议，操作规范"></a>Java内存模型-同步交互协议，操作规范</h2><blockquote>
-<p>将一个变量从主内存复制到工作内存要顺序执行read、load操作，要将</p>
-<p><img src="R:\Temp\TMP\1584883805335.png" alt="1584883805335"></p>
-</blockquote>
-<h2 id="保证变量可见性的方式"><a href="#保证变量可见性的方式" class="headerlink" title="保证变量可见性的方式"></a>保证变量可见性的方式</h2><blockquote>
-<p><img src="R:\Temp\TMP\1584883980181.png" alt="1584883980181"></p>
-</blockquote>
-<h2 id="为什么使用volatile关键字"><a href="#为什么使用volatile关键字" class="headerlink" title="为什么使用volatile关键字"></a>为什么使用volatile关键字</h2><blockquote>
-<p><img src="R:\Temp\TMP\1584885646653.png" alt="1584885646653"></p>
-</blockquote>
-<h2 id="volatile还有什么用途"><a href="#volatile还有什么用途" class="headerlink" title="volatile还有什么用途"></a>volatile还有什么用途</h2><blockquote>
-<p>volatile可用于限制局部代码指令重排序</p>
-</blockquote>
-<blockquote>
-<p><img src="R:\Temp\TMP\1584885929013.png" alt="1584885805796"></p>
-</blockquote>
-<h2 id="volatile的使用场景"><a href="#volatile的使用场景" class="headerlink" title="volatile的使用场景"></a>volatile的使用场景</h2><blockquote>
-<h3 id="volatile的使用范围"><a href="#volatile的使用范围" class="headerlink" title="volatile的使用范围"></a>volatile的使用范围</h3><blockquote>
-<ol>
-<li>volatile只可修饰成员变量</li>
-<li>多线程并发下，才需要使用到</li>
-</ol>
-</blockquote>
-</blockquote>
-<p>​        </p>
-
-      
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2021/01/17/%E5%B9%B6%E5%8F%91%E4%B8%AD%E7%9A%84%E5%8F%98%E9%87%8F%E5%8F%AF%E8%A7%81%E6%80%A7%E9%97%AE%E9%A2%98/" rel="prev" title="并发中变量可见性">
+      <i class="fa fa-chevron-left"></i> 并发中变量可见性
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2021/01/17/SpringBoot2.0%E5%AD%A6%E4%B9%A0/" rel="next" title="SpringBoot2.0">
+      SpringBoot2.0 <i class="fa fa-chevron-right"></i>
+    </a></div>
     </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
       </footer>
+    
   </article>
   
   
-  
-
-
   
 
 
 
           </div>
           
+    <div class="comments" id="valine-comments"></div>
 
 <script>
   window.addEventListener('tabs:register', () => {
@@ -796,6 +449,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E4%BC%A0%E7%BB%9F%E9%A1%B9%E7%9B%AE%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F"><span class="nav-number">1.</span> <span class="nav-text">1.传统项目生命周期</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E4%BC%98%E7%82%B9%EF%BC%9A"><span class="nav-number">1.0.1.</span> <span class="nav-text">优点：</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E7%BC%BA%E7%82%B9%EF%BC%9A"><span class="nav-number">1.0.2.</span> <span class="nav-text">缺点：</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-%E6%96%B0%E5%9E%8B%E9%A1%B9%E7%9B%AE%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F"><span class="nav-number">2.</span> <span class="nav-text">2.新型项目生命周期</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E4%BC%98%E7%82%B9%EF%BC%9A-1"><span class="nav-number">2.0.1.</span> <span class="nav-text">优点：</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E7%BC%BA%E7%82%B9%EF%BC%9A-1"><span class="nav-number">2.0.2.</span> <span class="nav-text">缺点：</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%80%BB%E7%BB%93%EF%BC%9A"><span class="nav-number">3.</span> <span class="nav-text">总结：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%A1%B9%E7%9B%AE%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83"><span class="nav-number">4.</span> <span class="nav-text">项目开发环境</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
