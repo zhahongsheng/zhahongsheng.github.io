@@ -1,9 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>使用Nginx配合Tomcat对单体web项目集群部署配置</title>
+    <url>/2021/01/17/Nginx%E9%9B%86%E7%BE%A4%E9%83%A8%E7%BD%B2/</url>
+    <content><![CDATA[<p>本文主要介绍如何使用Nginx对单体web引用进行集群部署！</p>
+<a id="more"></a>
+
+<h3 id="一、下载Nginx服务器"><a href="#一、下载Nginx服务器" class="headerlink" title="一、下载Nginx服务器"></a>一、下载Nginx服务器</h3><p>下载地址：<a href="http://nginx.org/">http://nginx.org/</a></p>
+<p>在此地址下面选择稳定版本的Nginx下载到本地，解压出来</p>
+<p><img src="C:\Users\zhahongsheng\AppData\Roaming\Typora\typora-user-images\image-20210111192526668.png" alt="image-20210111192526668"></p>
+<p><img src="C:\Users\zhahongsheng\AppData\Roaming\Typora\typora-user-images\image-20210111193114761.png" alt="image-20210111193114761"></p>
+<h3 id="二、测试Nginx服务"><a href="#二、测试Nginx服务" class="headerlink" title="二、测试Nginx服务"></a>二、测试Nginx服务</h3><p>解压好Nginx后直接双机Nginx.exe文件，启动Nginx，在浏览器中输入localhost，如果出现以下页面则证明Nginx已经成功启动。</p>
+<p><img src="C:\Users\zhahongsheng\AppData\Roaming\Typora\typora-user-images\image-20210111195645028.png" alt="image-20210111195645028"></p>
+<h3 id="三、修改Nginx配置文件"><a href="#三、修改Nginx配置文件" class="headerlink" title="三、修改Nginx配置文件"></a>三、修改Nginx配置文件</h3><p>修改Nginx中conf文件下的nginx.conf文件</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line"># 根据服务器性能进行权重设置</span><br><span class="line">    upstream wgf.com&#123; </span><br><span class="line">        server 127.0.0.1:8090  weight&#x3D;3;    #真实服务器A(sxwgf-PC)</span><br><span class="line">        server 127.0.0.1:8091  weight&#x3D;1;    #真实服务器B(sxwgf-PC)</span><br><span class="line">    &#125; </span><br></pre></td></tr></table></figure>
+<p>首先在http下面添加集群部署配置文件，如上面代码所示，如果有多个不同的web服务器，只需要将相关地址按照上面所示格式加进去即可 ，若是不同服务器性能不同，也可按照服务器的新能好坏，对对应的服务分配不同的权限，以均衡不同服务器的访问情况。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">server &#123;</span><br><span class="line">        listen       8088;</span><br><span class="line">        server_name  localhost;</span><br><span class="line"></span><br><span class="line">        location &#x2F;C1-DM &#123;</span><br><span class="line">            # root   html;</span><br><span class="line">            # index  index.html index.htm;</span><br><span class="line">            proxy_pass  http:&#x2F;&#x2F;wgf.com; </span><br><span class="line">            proxy_redirect  default; </span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        #</span><br><span class="line">        error_page   500 502 503 504  &#x2F;50x.html;</span><br><span class="line">        location &#x3D; &#x2F;50x.html &#123;</span><br><span class="line">            root   html;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<p>其次修改server部分的内容，此部分主要是针对Nginx的修改，Nginx的默认监听端口是80端口，如果想要修改为其他端口的话，自己修改好即可。其次在location里面修改Nginx的访问位置。集群部署的情况下，proxy_pass字段里面注意填写上面配置的集群的名字wgf.com。其他的可以不用做修改。</p>
+<h3 id="四、Tomcat启动web应用"><a href="#四、Tomcat启动web应用" class="headerlink" title="四、Tomcat启动web应用"></a>四、Tomcat启动web应用</h3><p>若果是在同一个服务器下面需要启动多个Tomcat的话，则可直接将现有的Tomcat复制几份，修改Tomcat的文件名，便于区分。其次修改各个Tomcat的配置文件，防止端口冲突</p>
+<p>修改Tomcat下面conf文件夹下的server.xml文件中的以下三个标签中port对应的数值，保证其对应的值在不同Tomcat下都不同：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&lt;Server port&#x3D;&quot;8006&quot; shutdown&#x3D;&quot;SHUTDOWN&quot;&gt;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">&lt;Connector port&#x3D;&quot;8090&quot; protocol&#x3D;&quot;HTTP&#x2F;1.1&quot;</span><br><span class="line">               connectionTimeout&#x3D;&quot;20000&quot;</span><br><span class="line">               redirectPort&#x3D;&quot;8443&quot; &#x2F;&gt;</span><br><span class="line">               </span><br><span class="line">&lt;Connector port&#x3D;&quot;8010&quot; protocol&#x3D;&quot;AJP&#x2F;1.3&quot; redirectPort&#x3D;&quot;8443&quot; &#x2F;&gt;</span><br></pre></td></tr></table></figure>
+<p>若果是在不同服务系下面则不用修改。</p>
+<p>做完以上操作后，启动Tomcat，先测试一下各个Tomcat下面下面启动的应用。</p>
+<h3 id="五、重启Nginx服务"><a href="#五、重启Nginx服务" class="headerlink" title="五、重启Nginx服务"></a>五、重启Nginx服务</h3><p>在Nginx.exe文件所在的文件下，进入cmd，执行重启服务命令</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">nginx -s reload</span><br></pre></td></tr></table></figure>
+<p>重启完成后，在浏览器输入<a href="http://Nginx服务启动的地址：Nginx服务监听的端口/Tomcat下启动对应应用的应用名。">http://Nginx服务启动的地址：Nginx服务监听的端口/Tomcat下启动对应应用的应用名。</a></p>
+<p>若看到应用页面正常启动，则代表部署完成。</p>
+]]></content>
+      <categories>
+        <category>前端</category>
+        <category>Nginx</category>
+      </categories>
+      <tags>
+        <tag>Nginx</tag>
+        <tag>集群</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Nginx</title>
     <url>/2021/01/17/Nignx%E5%AD%A6%E4%B9%A0/</url>
-    <content><![CDATA[<a id="more"></a>
+    <content><![CDATA[<p>本文主要介绍传统项目的项目周期，及项目周期中各个阶段的行为和新型项目的对比。</p>
+<a id="more"></a>
 
 <h3 id="1-传统项目生命周期"><a href="#1-传统项目生命周期" class="headerlink" title="1.传统项目生命周期"></a>1.传统项目生命周期</h3><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">1.调研阶段</span><br><span class="line">2.设计阶段</span><br><span class="line">3.开发阶段</span><br><span class="line">4.测试阶段</span><br><span class="line">5.运营阶段</span><br></pre></td></tr></table></figure>
 <table>
@@ -80,7 +117,8 @@
   <entry>
     <title>SpringBoot2.0</title>
     <url>/2021/01/17/SpringBoot2.0%E5%AD%A6%E4%B9%A0/</url>
-    <content><![CDATA[<a id="more"></a>
+    <content><![CDATA[<p>本文主要介绍SpringBoot、springcloud和</p>
+<a id="more"></a>
 <h2 id="SpringBoot引入"><a href="#SpringBoot引入" class="headerlink" title="SpringBoot引入"></a>SpringBoot引入</h2><h3 id="1-为什么要用SpringBoot"><a href="#1-为什么要用SpringBoot" class="headerlink" title="1 为什么要用SpringBoot"></a>1 为什么要用SpringBoot</h3><p>传统项目：整合SSH或者SSM，考虑配置文件、Jar冲突问题、整合起来繁琐</p>
 <p>​        打包方式：打包成一个war放入Tomcatwebapp目录下进行执行</p>
 <p>SpringBoot是一个快速开发框架，能够帮助我们快速整合第三方框架（Maven依赖关系##Maven继承），<strong>完全采用注解化</strong>，简化XML配置。内置嵌入Http服务器（Tomcat、Jetty），默认嵌入Tomcat服务器。<strong>最终Java应用程序进行执行。</strong></p>
@@ -111,45 +149,12 @@
       </tags>
   </entry>
   <entry>
-    <title>使用Nginx配合Tomcat对单体web项目集群部署配置</title>
-    <url>/2021/01/17/Nginx%E9%9B%86%E7%BE%A4%E9%83%A8%E7%BD%B2/</url>
-    <content><![CDATA[<p>本文主要介绍如何使用Nginx对单体web引用进行集群部署！</p>
-<a id="more"></a>
-
-<h3 id="一、下载Nginx服务器"><a href="#一、下载Nginx服务器" class="headerlink" title="一、下载Nginx服务器"></a>一、下载Nginx服务器</h3><p>下载地址：<a href="http://nginx.org/">http://nginx.org/</a></p>
-<p>在此地址下面选择稳定版本的Nginx下载到本地，解压出来</p>
-<p><img src="C:\Users\zhahongsheng\AppData\Roaming\Typora\typora-user-images\image-20210111192526668.png" alt="image-20210111192526668"></p>
-<p><img src="C:\Users\zhahongsheng\AppData\Roaming\Typora\typora-user-images\image-20210111193114761.png" alt="image-20210111193114761"></p>
-<h3 id="二、测试Nginx服务"><a href="#二、测试Nginx服务" class="headerlink" title="二、测试Nginx服务"></a>二、测试Nginx服务</h3><p>解压好Nginx后直接双机Nginx.exe文件，启动Nginx，在浏览器中输入localhost，如果出现以下页面则证明Nginx已经成功启动。</p>
-<p><img src="C:\Users\zhahongsheng\AppData\Roaming\Typora\typora-user-images\image-20210111195645028.png" alt="image-20210111195645028"></p>
-<h3 id="三、修改Nginx配置文件"><a href="#三、修改Nginx配置文件" class="headerlink" title="三、修改Nginx配置文件"></a>三、修改Nginx配置文件</h3><p>修改Nginx中conf文件下的nginx.conf文件</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line"># 根据服务器性能进行权重设置</span><br><span class="line">    upstream wgf.com&#123; </span><br><span class="line">        server 127.0.0.1:8090  weight&#x3D;3;    #真实服务器A(sxwgf-PC)</span><br><span class="line">        server 127.0.0.1:8091  weight&#x3D;1;    #真实服务器B(sxwgf-PC)</span><br><span class="line">    &#125; </span><br></pre></td></tr></table></figure>
-<p>首先在http下面添加集群部署配置文件，如上面代码所示，如果有多个不同的web服务器，只需要将相关地址按照上面所示格式加进去即可 ，若是不同服务器性能不同，也可按照服务器的新能好坏，对对应的服务分配不同的权限，以均衡不同服务器的访问情况。</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">server &#123;</span><br><span class="line">        listen       8088;</span><br><span class="line">        server_name  localhost;</span><br><span class="line"></span><br><span class="line">        location &#x2F;C1-DM &#123;</span><br><span class="line">            # root   html;</span><br><span class="line">            # index  index.html index.htm;</span><br><span class="line">            proxy_pass  http:&#x2F;&#x2F;wgf.com; </span><br><span class="line">            proxy_redirect  default; </span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        #</span><br><span class="line">        error_page   500 502 503 504  &#x2F;50x.html;</span><br><span class="line">        location &#x3D; &#x2F;50x.html &#123;</span><br><span class="line">            root   html;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
-<p>其次修改server部分的内容，此部分主要是针对Nginx的修改，Nginx的默认监听端口是80端口，如果想要修改为其他端口的话，自己修改好即可。其次在location里面修改Nginx的访问位置。集群部署的情况下，proxy_pass字段里面注意填写上面配置的集群的名字wgf.com。其他的可以不用做修改。</p>
-<h3 id="四、Tomcat启动web应用"><a href="#四、Tomcat启动web应用" class="headerlink" title="四、Tomcat启动web应用"></a>四、Tomcat启动web应用</h3><p>若果是在同一个服务器下面需要启动多个Tomcat的话，则可直接将现有的Tomcat复制几份，修改Tomcat的文件名，便于区分。其次修改各个Tomcat的配置文件，防止端口冲突</p>
-<p>修改Tomcat下面conf文件夹下的server.xml文件中的以下三个标签中port对应的数值，保证其对应的值在不同Tomcat下都不同：</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&lt;Server port&#x3D;&quot;8006&quot; shutdown&#x3D;&quot;SHUTDOWN&quot;&gt;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">&lt;Connector port&#x3D;&quot;8090&quot; protocol&#x3D;&quot;HTTP&#x2F;1.1&quot;</span><br><span class="line">               connectionTimeout&#x3D;&quot;20000&quot;</span><br><span class="line">               redirectPort&#x3D;&quot;8443&quot; &#x2F;&gt;</span><br><span class="line">               </span><br><span class="line">&lt;Connector port&#x3D;&quot;8010&quot; protocol&#x3D;&quot;AJP&#x2F;1.3&quot; redirectPort&#x3D;&quot;8443&quot; &#x2F;&gt;</span><br></pre></td></tr></table></figure>
-<p>若果是在不同服务系下面则不用修改。</p>
-<p>做完以上操作后，启动Tomcat，先测试一下各个Tomcat下面下面启动的应用。</p>
-<h3 id="五、重启Nginx服务"><a href="#五、重启Nginx服务" class="headerlink" title="五、重启Nginx服务"></a>五、重启Nginx服务</h3><p>在Nginx.exe文件所在的文件下，进入cmd，执行重启服务命令</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">nginx -s reload</span><br></pre></td></tr></table></figure>
-<p>重启完成后，在浏览器输入<a href="http://Nginx服务启动的地址：Nginx服务监听的端口/Tomcat下启动对应应用的应用名。">http://Nginx服务启动的地址：Nginx服务监听的端口/Tomcat下启动对应应用的应用名。</a></p>
-<p>若看到应用页面正常启动，则代表部署完成。</p>
-]]></content>
-      <categories>
-        <category>前端</category>
-        <category>Nginx</category>
-      </categories>
-      <tags>
-        <tag>Nginx</tag>
-        <tag>集群</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>并发中变量可见性</title>
     <url>/2021/01/17/%E5%B9%B6%E5%8F%91%E4%B8%AD%E7%9A%84%E5%8F%98%E9%87%8F%E5%8F%AF%E8%A7%81%E6%80%A7%E9%97%AE%E9%A2%98/</url>
-    <content><![CDATA[<p><img src="R:\Temp\TMP\1584879219560.png" alt="1584879219560"></p>
+    <content><![CDATA[<p>本文主要介绍高并发中变量的可见性问题</p>
+<a id="more"></a>
+
+<p><img src="R:\Temp\TMP\1584879219560.png" alt="1584879219560"></p>
 <h1 id="并发中的变量的可见性问题"><a href="#并发中的变量的可见性问题" class="headerlink" title="并发中的变量的可见性问题"></a>并发中的变量的可见性问题</h1><blockquote>
 <h2 id="问题1：变量分为哪几类"><a href="#问题1：变量分为哪几类" class="headerlink" title="问题1：变量分为哪几类"></a>问题1：变量分为哪几类</h2><blockquote>
 <ol>
