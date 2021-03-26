@@ -37,124 +37,6 @@
       </tags>
   </entry>
   <entry>
-    <title>使用Java导出数据到Excel</title>
-    <url>/2021/01/17/%E4%BD%BF%E7%94%A8Java%E5%AF%BC%E5%87%BAExcel/</url>
-    <content><![CDATA[<p>本文主要介绍使用Java导出数据到excel事需要注意的问题，以及Java导出excel常用的方法。</p>
-<a id="more"></a>
-
-<h3 id="一、excel数据导出限制"><a href="#一、excel数据导出限制" class="headerlink" title="一、excel数据导出限制"></a>一、excel数据导出限制</h3><ol>
-<li>Excel 2003及以下的版本。一张表最大支持<strong>65536</strong>行数据，256列。也就是说excel2003完全不可能满足百万数据导出的需求。</li>
-<li>Excel 2007-2010版本。一张表最大支持<strong>1048576</strong>行，16384列；</li>
-<li>在针对超过1048576的数据量的数据导出的时候，就不能简单的导出到Excel的单个sheet页中了，必须得采用程序拆分的方式将数据存放到不同的sheet中，如下图所示：</li>
-</ol>
-<p><img src="http://qn34ieo15.hn-bkt.clouddn.com/image/image-20210120203429998.png" alt="image-20210120203429998"></p>
-<p>在对一个sheet表中存储数据超过一定数据量的时候，将剩下的数据存放在一个新的sheet页中。</p>
-<h3 id="二、HSSFworkbook-XSSFworkbook-SXSSFworkbook区别"><a href="#二、HSSFworkbook-XSSFworkbook-SXSSFworkbook区别" class="headerlink" title="二、HSSFworkbook,XSSFworkbook,SXSSFworkbook区别"></a>二、HSSFworkbook,XSSFworkbook,SXSSFworkbook区别</h3><h4 id="HSSFworkbook"><a href="#HSSFworkbook" class="headerlink" title="HSSFworkbook"></a>HSSFworkbook</h4><p>是操作Excel2003以前（包括2003）的版本，扩展名是.xls；</p>
-<p>poi导出excel最常用的方式；但是此种方式的局限就是导出的行数至多为65535行，超出65536条后系统就会报错。此方式因为行数不足七万行所以一般不会发生内存不足的情况（OOM）</p>
-<h4 id="XSSFWorkbook"><a href="#XSSFWorkbook" class="headerlink" title="XSSFWorkbook"></a>XSSFWorkbook</h4><p>是操作Excel2007后的版本，扩展名是.xlsx；</p>
-<p>这种形式的出现是为了突破HSSFWorkbook的65535行局限。其对应的是excel2007(1048576行，16384列)扩展名为“.xlsx”，最多可以导出104万行，不过这样就伴随着一个问题—OOM内存溢出，原因是你所创建的book sheet row cell等此时是存在内存的并没有持久化。</p>
-<h4 id="SXSSFWorkbook"><a href="#SXSSFWorkbook" class="headerlink" title="SXSSFWorkbook"></a>SXSSFWorkbook</h4><p>是操作Excel2007后的版本，扩展名是.xlsx；</p>
-<p>从POI 3.8版本开始，提供了一种基于XSSF的低内存占用的SXSSF方式。对于大型excel文件的创建，一个关键问题就是，要确保不会内存溢出。其实，就算生成很小的excel（比如几Mb），它用掉的内存是远大于excel文件实际的size的。如果单元格还有各种格式（比如，加粗，背景标红之类的），那它占用的内存就更多了。对于大型excel的创建且不会内存溢出的，就只有SXSSFWorkbook了。它的原理很简单，用硬盘空间换内存（就像hash map用空间换时间一样）。</p>
-<p>SXSSFWorkbook是streaming版本的XSSFWorkbook,它只会保存最新的excel rows在内存里供查看，在此之前的excel rows都会被写入到硬盘里（Windows电脑的话，是写入到C盘根目录下的temp文件夹）。被写入到硬盘里的rows是不可见的/不可访问的。只有还保存在内存里的才可以被访问到。</p>
-<p> SXSSF与XSSF的对比：</p>
-<ol>
-<li>在一个时间点上，只可以访问一定数量的数据</li>
-<li>不再支持Sheet.clone()</li>
-<li>不再支持公式的求值</li>
-<li>在使用Excel模板下载数据时将不能动态改变表头，因为这种方式已经提前把excel写到硬盘的了就不能再改了</li>
-<li>针对于大数据量的情况下使用SXSSF导出比XSSF导出效率要高得多。</li>
-</ol>
-<h3 id="三、SXSSFWorkbook导出excel示例"><a href="#三、SXSSFWorkbook导出excel示例" class="headerlink" title="三、SXSSFWorkbook导出excel示例"></a>三、SXSSFWorkbook导出excel示例</h3><ol>
-<li><p>引入依赖</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&lt;!--poi-ooxml--&gt;</span><br><span class="line">&lt;dependency&gt;</span><br><span class="line">    &lt;groupId&gt;org.apache.poi&lt;&#x2F;groupId&gt;</span><br><span class="line">    &lt;artifactId&gt;poi-ooxml&lt;&#x2F;artifactId&gt;</span><br><span class="line">    &lt;version&gt;3.9&lt;&#x2F;version&gt;</span><br><span class="line">&lt;&#x2F;dependency&gt;</span><br></pre></td></tr></table></figure></li>
-<li><p>编写SxssfWorkbookUtil</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">package com.yuanian.common.utils;</span><br><span class="line"></span><br><span class="line">import org.apache.poi.ss.usermodel.*;</span><br><span class="line">import org.apache.poi.ss.util.CellRangeAddress;</span><br><span class="line">import org.apache.poi.xssf.streaming.SXSSFWorkbook;</span><br><span class="line">import org.apache.poi.xssf.usermodel.*;</span><br><span class="line"></span><br><span class="line">import java.util.List;</span><br><span class="line">import java.util.Map;</span><br><span class="line"></span><br><span class="line">&#x2F;**</span><br><span class="line"> * @author zhahsh</span><br><span class="line"> * @date 2021&#x2F;1&#x2F;20</span><br><span class="line"> *&#x2F;</span><br><span class="line">public class SxssfWorkbookUtil &#123;</span><br><span class="line">    public static XSSFCellStyle headCellStyle;</span><br><span class="line"></span><br><span class="line">    &#x2F;**</span><br><span class="line">     * 设置单元格样式1</span><br><span class="line">     * @param sxssfWorkbook 工作簿</span><br><span class="line">     * @return 单元格样式</span><br><span class="line">     *&#x2F;</span><br><span class="line">    public static XSSFCellStyle getAndSetXSSFCellStyleOne(SXSSFWorkbook sxssfWorkbook) &#123;</span><br><span class="line">        XSSFCellStyle xssfCellStyle &#x3D; (XSSFCellStyle) sxssfWorkbook.createCellStyle();</span><br><span class="line">        XSSFDataFormat format &#x3D; (XSSFDataFormat) sxssfWorkbook.createDataFormat();</span><br><span class="line">        &#x2F;&#x2F; 是否自动换行</span><br><span class="line">        xssfCellStyle.setWrapText(false);</span><br><span class="line">        &#x2F;&#x2F; 水平居中</span><br><span class="line">        xssfCellStyle.setAlignment(HorizontalAlignment.CENTER);</span><br><span class="line">        &#x2F;&#x2F; 垂直居中</span><br><span class="line">        xssfCellStyle.setVerticalAlignment(VerticalAlignment.CENTER);</span><br><span class="line">        &#x2F;&#x2F; 前景颜色</span><br><span class="line">        xssfCellStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);</span><br><span class="line">        xssfCellStyle.setFillForegroundColor(IndexedColors.RED.getIndex());</span><br><span class="line">        &#x2F;&#x2F; 边框</span><br><span class="line">        xssfCellStyle.setBorderBottom(BorderStyle.THIN);</span><br><span class="line">        xssfCellStyle.setBorderRight(BorderStyle.THIN);</span><br><span class="line">        xssfCellStyle.setBorderTop(BorderStyle.THIN);</span><br><span class="line">        xssfCellStyle.setBorderLeft(BorderStyle.THIN);</span><br><span class="line">        xssfCellStyle.setBottomBorderColor(IndexedColors.BLACK.getIndex());</span><br><span class="line">        xssfCellStyle.setRightBorderColor(IndexedColors.BLACK.getIndex());</span><br><span class="line">        xssfCellStyle.setTopBorderColor(IndexedColors.BLACK.getIndex());</span><br><span class="line">        xssfCellStyle.setLeftBorderColor(IndexedColors.BLACK.getIndex());</span><br><span class="line">        &#x2F;&#x2F; 防止数字过长,excel导出后,显示为科学计数法,如:防止8615192053888被显示为8.61519E+12</span><br><span class="line">        xssfCellStyle.setDataFormat(format.getFormat(&quot;0&quot;));</span><br><span class="line">        return xssfCellStyle;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    &#x2F;**</span><br><span class="line">     * 设置单元格样式2</span><br><span class="line">     * @param sxssfWorkbook 工作簿</span><br><span class="line">     * @return 单元格样式</span><br><span class="line">     *&#x2F;</span><br><span class="line">    public static XSSFCellStyle getAndSetXSSFCellStyleTwo(SXSSFWorkbook sxssfWorkbook) &#123;</span><br><span class="line">        XSSFCellStyle xssfCellStyle &#x3D; (XSSFCellStyle) sxssfWorkbook.createCellStyle();</span><br><span class="line">        XSSFDataFormat format &#x3D; (XSSFDataFormat) sxssfWorkbook.createDataFormat();</span><br><span class="line">        &#x2F;&#x2F; 是否自动换行</span><br><span class="line">        xssfCellStyle.setWrapText(false);</span><br><span class="line">        &#x2F;&#x2F; 水平居中</span><br><span class="line">        xssfCellStyle.setAlignment(HorizontalAlignment.CENTER);</span><br><span class="line">        &#x2F;&#x2F; 边框</span><br><span class="line">        xssfCellStyle.setBorderBottom(BorderStyle.THIN);</span><br><span class="line">        xssfCellStyle.setBorderRight(BorderStyle.THIN);</span><br><span class="line">        xssfCellStyle.setBorderTop(BorderStyle.THIN);</span><br><span class="line">        xssfCellStyle.setBorderLeft(BorderStyle.THIN);</span><br><span class="line">        xssfCellStyle.setBottomBorderColor(IndexedColors.BLACK.getIndex());</span><br><span class="line">        xssfCellStyle.setRightBorderColor(IndexedColors.BLACK.getIndex());</span><br><span class="line">        xssfCellStyle.setTopBorderColor(IndexedColors.BLACK.getIndex());</span><br><span class="line">        xssfCellStyle.setLeftBorderColor(IndexedColors.BLACK.getIndex());</span><br><span class="line">        &#x2F;&#x2F; 垂直居中</span><br><span class="line">        xssfCellStyle.setVerticalAlignment(VerticalAlignment.CENTER);</span><br><span class="line">        &#x2F;&#x2F; 防止数字过长,excel导出后,显示为科学计数法,如:防止8615192053888被显示为8.61519E+12</span><br><span class="line">        xssfCellStyle.setDataFormat(format.getFormat(&quot;0&quot;));</span><br><span class="line">        return xssfCellStyle;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    &#x2F;**</span><br><span class="line">     * 获取并设置header样式</span><br><span class="line">     *&#x2F;</span><br><span class="line">    public static XSSFCellStyle getAndSetXSSFCellStyleHeader(SXSSFWorkbook sxssfWorkbook) &#123;</span><br><span class="line">        XSSFCellStyle headCellStyle &#x3D; (XSSFCellStyle) sxssfWorkbook.createCellStyle();</span><br><span class="line">        Font font &#x3D; sxssfWorkbook.createFont();</span><br><span class="line">        &#x2F;&#x2F; 字体大小</span><br><span class="line">        font.setFontHeightInPoints((short) 14);</span><br><span class="line">        &#x2F;&#x2F; 字体粗细</span><br><span class="line">        font.setBold(true);</span><br><span class="line">        &#x2F;&#x2F; 将字体应用到样式上面</span><br><span class="line">        headCellStyle.setFont(font);</span><br><span class="line">        return headCellStyle;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    &#x2F;**</span><br><span class="line">     * 根据sheet页和head内容填充sheet页头部</span><br><span class="line">     * @param sheet sheet页</span><br><span class="line">     * @param map 题头</span><br><span class="line">     *&#x2F;</span><br><span class="line">    public static final void createTableHeader(Sheet sheet, Map&lt;Integer, List&lt;ExcelBean&gt;&gt; map) &#123;</span><br><span class="line">        int startIndex &#x3D; 0;&#x2F;&#x2F;cell起始位置</span><br><span class="line">        int endIndex &#x3D; 0;&#x2F;&#x2F;cell终止位置</span><br><span class="line">        for (Map.Entry&lt;Integer, List&lt;ExcelBean&gt;&gt; entry : map.entrySet()) &#123;</span><br><span class="line">            Row row &#x3D; sheet.createRow(entry.getKey());</span><br><span class="line">            List&lt;ExcelBean&gt; excels &#x3D; entry.getValue();</span><br><span class="line">            for (int x &#x3D; 0; x &lt; excels.size(); x++) &#123;</span><br><span class="line">                &#x2F;&#x2F;合并单元格</span><br><span class="line">                if (excels.get(x).getCols() &gt; 1) &#123;</span><br><span class="line">                    if (x &#x3D;&#x3D; 0) &#123;</span><br><span class="line">                        endIndex +&#x3D; excels.get(x).getCols() - 1;</span><br><span class="line">                        CellRangeAddress range &#x3D; new CellRangeAddress(0, 0, startIndex, endIndex);</span><br><span class="line">                        sheet.addMergedRegion(range);</span><br><span class="line">                        startIndex +&#x3D; excels.get(x).getCols();</span><br><span class="line">                    &#125; else &#123;</span><br><span class="line">                        endIndex +&#x3D; excels.get(x).getCols();</span><br><span class="line">                        CellRangeAddress range &#x3D; new CellRangeAddress(0, 0, startIndex, endIndex);</span><br><span class="line">                        sheet.addMergedRegion(range);</span><br><span class="line">                        startIndex +&#x3D; excels.get(x).getCols();</span><br><span class="line">                    &#125;</span><br><span class="line">                    Cell cell &#x3D; row.createCell(x);</span><br><span class="line">                    cell.setCellValue(excels.get(x).getHeadTextName());&#x2F;&#x2F; 设置内容</span><br><span class="line">                    if (excels.get(x).getCellStyle() !&#x3D; null) &#123;</span><br><span class="line">                        cell.getCellStyle().cloneStyleFrom(excels.get(x).getCellStyle());&#x2F;&#x2F; 设置格式</span><br><span class="line">                    &#125;</span><br><span class="line">                    cell.getCellStyle().cloneStyleFrom(headCellStyle);</span><br><span class="line">                &#125; else &#123;</span><br><span class="line">                    Cell cell &#x3D; row.createCell(x);</span><br><span class="line">                    cell.setCellValue(excels.get(x).getHeadTextName());&#x2F;&#x2F; 设置内容</span><br><span class="line">                    cell.setCellStyle(headCellStyle);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure></li>
-<li><p>编写程序代码</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">while (rs.next())&#123;</span><br><span class="line"></span><br><span class="line">				&#x2F;&#x2F;当数据量超过1000000行的时候，重新生成一张sheet页，将剩余的数据网新的sheet页中写</span><br><span class="line">                if (rowIndex &gt;&#x3D; 1000000)&#123;</span><br><span class="line">                    temp++;</span><br><span class="line">                    Sheet sheet1 &#x3D; workbook.createSheet(&quot;转换数据&quot;.concat(String.valueOf(temp)));</span><br><span class="line">                    SxssfWorkbookUtil.createTableHeader(sheet1, map);</span><br><span class="line">                    sheets.add(sheet1);</span><br><span class="line">                    rowIndex &#x3D; 1;</span><br><span class="line">                &#125;</span><br><span class="line"></span><br><span class="line">                Row row &#x3D; sheets.get(temp).createRow(rowIndex);</span><br><span class="line">                int width &#x3D; 300;</span><br><span class="line">                for(int j&#x3D;0;j&lt;count;j++)&#123;</span><br><span class="line">                    Cell cell &#x3D; row.createCell(j);</span><br><span class="line">                    String value &#x3D; &quot;&quot;;</span><br><span class="line">                    if (ObjectUtil.isNotNull(rs.getObject(j+1)))&#123;</span><br><span class="line">                        value &#x3D; String.valueOf(rs.getObject(j+1));</span><br><span class="line">                    &#125;</span><br><span class="line">                    if (j &#x3D;&#x3D; count - 1)&#123;</span><br><span class="line">                        switch (value) &#123;</span><br><span class="line">                            &#x2F;&#x2F;0&#x3D;未转换；1&#x3D;转换成功；2&#x3D;存在未转换数据</span><br><span class="line">                            case &quot;0&quot;:</span><br><span class="line">                                value &#x3D; &quot;未转换&quot;;</span><br><span class="line">                                break;</span><br><span class="line">                            case &quot;1&quot;:</span><br><span class="line">                                value &#x3D; &quot;转换成功&quot;;</span><br><span class="line">                                break;</span><br><span class="line">                            case &quot;2&quot;:</span><br><span class="line">                                value &#x3D; &quot;存在未转换数据&quot;;</span><br><span class="line">                        &#125;</span><br><span class="line">                    &#125;</span><br><span class="line"></span><br><span class="line">                    cell.setCellType(STRING);</span><br><span class="line">                    cell.setCellValue(value);</span><br><span class="line">                    &#x2F;&#x2F; 获得最大列宽</span><br><span class="line">                    if (!StringUtils.isNULL(value)) &#123;</span><br><span class="line">                        width &#x3D; value.getBytes().length * 300;</span><br><span class="line">                        cell.setCellStyle(fontStyle2);</span><br><span class="line">                    &#125;else &#123;</span><br><span class="line"></span><br><span class="line">                        cell.setCellStyle(fontStyle1);</span><br><span class="line">                    &#125;</span><br><span class="line"></span><br><span class="line">                    &#x2F;&#x2F; 还未设置，设置当前</span><br><span class="line">                    if (widths.size() &lt;&#x3D; j) &#123;</span><br><span class="line">                        widths.add(width);</span><br><span class="line">                        continue;</span><br><span class="line">                    &#125;</span><br><span class="line">                    &#x2F;&#x2F; 比原来大，更新数据</span><br><span class="line">                    if (width &gt; widths.get(j)) &#123;</span><br><span class="line">                        widths.set(j, width);</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">                rowIndex++;</span><br><span class="line">            &#125;</span><br></pre></td></tr></table></figure>
-</li>
-</ol>
-]]></content>
-      <categories>
-        <category>后端</category>
-        <category>Java</category>
-      </categories>
-      <tags>
-        <tag>Java</tag>
-        <tag>Excel导出</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>阻塞队列介绍</title>
-    <url>/2021/03/26/%E9%98%BB%E5%A1%9E%E9%98%9F%E5%88%97/</url>
-    <content><![CDATA[<p>本文主要介绍如何使用Nginx对单体web引用进行集群部署！</p>
-<a id="more"></a>
-
-<h3 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h3><p><strong>阻塞队列（BlockingQueue）</strong> 是一个支持两个附加操作的队列。这两个附加的操作是：在队列为空时，获取元素的线程会等待队列变为非空。当队列满时，存储元素的线程会等待队列可用。阻塞队列常用于生产者和消费者的场景，生产者是往队列里添加元素的线程，消费者是从队列里拿元素的线程。阻塞队列就是生产者存放元素的容器，而消费者也只从容器里拿元素。</p>
-<h3 id="java中的阻塞队列"><a href="#java中的阻塞队列" class="headerlink" title="java中的阻塞队列"></a>java中的阻塞队列</h3><table>
-<thead>
-<tr>
-<th>阻塞队列种类</th>
-<th>描述</th>
-</tr>
-</thead>
-<tbody><tr>
-<td><strong>ArrayBlockingQueue</strong></td>
-<td>一个由数组结构组成的有界阻塞队列</td>
-</tr>
-<tr>
-<td><strong>LinkedBlockingQueue</strong></td>
-<td>一个由链表结构组成的有界阻塞队列</td>
-</tr>
-<tr>
-<td><strong>PriorityBlockingQueue</strong></td>
-<td>一个支持优先级排序的无界阻塞队列</td>
-</tr>
-<tr>
-<td><strong>DelayQueue</strong></td>
-<td>一个使用优先级队列实现的无界阻塞队列</td>
-</tr>
-<tr>
-<td><strong>SynchronousQueue</strong></td>
-<td>一个不存储元素的阻塞队列</td>
-</tr>
-<tr>
-<td><strong>LinkedTransferQueue</strong></td>
-<td>一个由链表结构组成的无界阻塞队列</td>
-</tr>
-<tr>
-<td><strong>LinkedBlockingDeque</strong></td>
-<td>一个由链表结构组成的双向阻塞队列</td>
-</tr>
-</tbody></table>
-<p>在JDK提供的阻塞队列中，除了LinkedBlockingDeque 是一个 Deque（双向的队列），其实现的接口是 BlockingDeque；其余6个阻塞队列则是 Queue（单向队列），实现的接口是 BlockingQueue。</p>
-<h3 id="对于单向-BlockingQueue常用方法描述"><a href="#对于单向-BlockingQueue常用方法描述" class="headerlink" title="对于单向 BlockingQueue常用方法描述"></a>对于单向 <strong>BlockingQueue</strong>常用方法描述</h3><p><img src="http://qiniu.zhahongsheng.top//image/image-20210326120241742.png" alt="image-20210326120241742"></p>
-<p>上述方法中，remove、element、offer、poll、peek都是属于Queue接口，其中add、remove、element在操作队列的时候，如果没有达到目的会抛出异常。而offer、poll、peek则只是给出一个操作状态的提示。</p>
-<p>而对于take和put两种方法则会在有阻塞时，等待队列达到操作要求，完成操作，而不是直接返回结果。</p>
-<h3 id="对于四种单向队列解释"><a href="#对于四种单向队列解释" class="headerlink" title="对于四种单向队列解释"></a>对于四种单向队列解释</h3><ol>
-<li><h4 id="LinkedBlockingQueue"><a href="#LinkedBlockingQueue" class="headerlink" title="LinkedBlockingQueue"></a>LinkedBlockingQueue</h4><p>LinkedBlockingQueue的容量在不指定的情况下为 Integer.MAX_VALUE，但是也可以指定其最大容量，其中主要用到 put 和 take 方法，它是基于链表的队列，此队列按 FIFO （先进先出）排序元素，是线程安全的。</p>
-</li>
-<li><p>ArrayBlockingQueue</p>
-<p>ArrayBlockingQueue在构造时需要指定容量，并可以选择是否需要公平性，如果公平参数被设置为 true，等待时间最长的线程会优先得到处理（其实就是通过将 ReentrantLock 设置为 true 来达到这种公平性：即等待时间最长的线程会先操作）。通常，公平性会使你在性能上付出代价，只有在的确非常需要的时候再使用它。它是基于数组的阻塞循环队列，此队列按 FIFO（先进先出）原则对元素进行排序</p>
-</li>
-<li><p>PriorityBlockingQueue</p>
-<p>PriorityBlockingQueue是一个带优先级的 队列，而不是先进先出队列。元素按优先级顺序被移除，该队列也没有上限（看了一下源码，PriorityBlockingQueue是对 PriorityQueue的再次包装，是基于堆数据结构的，而PriorityQueue是没有容量限制的，与ArrayList一样，所以在优先阻塞 队列上put时是不会受阻的。虽然此队列逻辑上是无界的，但是由于资源被耗尽，所以试图执行添加操作可能会导致 OutOfMemoryError），但是如果队列为空，那么取元素的操作take就会阻塞，所以它的检索操作take是受阻的。另外，往入该队列中的元 素要具有比较能力。</p>
-</li>
-<li><p>DelayQueue</p>
-<p>DelayQueue（基于PriorityQueue来实现的）是一个存放Delayed 元素的无界阻塞队列，只有在延迟期满时才能从中提取元素。该队列的头部是延迟期满后保存时间最长的 Delayed 元素。如果延迟都还没有期满，则队列没有头部，并且poll将返回null。当一个元素的 getDelay(TimeUnit.NANOSECONDS) 方法返回一个小于或等于零的值时，则出现期满，poll就以移除这个元素了。此队列不允许使用 null 元素。</p>
-</li>
-</ol>
-<h4 id="阻塞队列的实现原理"><a href="#阻塞队列的实现原理" class="headerlink" title="阻塞队列的实现原理"></a>阻塞队列的实现原理</h4><p>阻塞队列实际上是使用通知模式实现的，即当生产者在往满的队列里添加元素时会阻塞生产者，当消费者消费了一个队列中的元素的时候会通知生产者当前队列可用，可以继续生产了。</p>
-]]></content>
-      <categories>
-        <category>后端</category>
-        <category>数据结构</category>
-      </categories>
-      <tags>
-        <tag>队列</tag>
-        <tag>阻塞队列</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>Nginx</title>
     <url>/2021/01/17/Nignx%E5%AD%A6%E4%B9%A0/</url>
     <content><![CDATA[<p>本文主要介绍传统项目的项目周期，及项目周期中各个阶段的行为和新型项目的对比。</p>
@@ -264,6 +146,125 @@
       </categories>
       <tags>
         <tag>SpringBoot</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>使用Java导出数据到Excel</title>
+    <url>/2021/01/17/%E4%BD%BF%E7%94%A8Java%E5%AF%BC%E5%87%BAExcel/</url>
+    <content><![CDATA[<p>本文主要介绍使用Java导出数据到excel事需要注意的问题，以及Java导出excel常用的方法。</p>
+<a id="more"></a>
+
+<h3 id="一、excel数据导出限制"><a href="#一、excel数据导出限制" class="headerlink" title="一、excel数据导出限制"></a>一、excel数据导出限制</h3><ol>
+<li>Excel 2003及以下的版本。一张表最大支持<strong>65536</strong>行数据，256列。也就是说excel2003完全不可能满足百万数据导出的需求。</li>
+<li>Excel 2007-2010版本。一张表最大支持<strong>1048576</strong>行，16384列；</li>
+<li>在针对超过1048576的数据量的数据导出的时候，就不能简单的导出到Excel的单个sheet页中了，必须得采用程序拆分的方式将数据存放到不同的sheet中，如下图所示：</li>
+</ol>
+<p><img src="http://qn34ieo15.hn-bkt.clouddn.com/image/image-20210120203429998.png" alt="image-20210120203429998"></p>
+<p>在对一个sheet表中存储数据超过一定数据量的时候，将剩下的数据存放在一个新的sheet页中。</p>
+<h3 id="二、HSSFworkbook-XSSFworkbook-SXSSFworkbook区别"><a href="#二、HSSFworkbook-XSSFworkbook-SXSSFworkbook区别" class="headerlink" title="二、HSSFworkbook,XSSFworkbook,SXSSFworkbook区别"></a>二、HSSFworkbook,XSSFworkbook,SXSSFworkbook区别</h3><h4 id="HSSFworkbook"><a href="#HSSFworkbook" class="headerlink" title="HSSFworkbook"></a>HSSFworkbook</h4><p>是操作Excel2003以前（包括2003）的版本，扩展名是.xls；</p>
+<p>poi导出excel最常用的方式；但是此种方式的局限就是导出的行数至多为65535行，超出65536条后系统就会报错。此方式因为行数不足七万行所以一般不会发生内存不足的情况（OOM）</p>
+<h4 id="XSSFWorkbook"><a href="#XSSFWorkbook" class="headerlink" title="XSSFWorkbook"></a>XSSFWorkbook</h4><p>是操作Excel2007后的版本，扩展名是.xlsx；</p>
+<p>这种形式的出现是为了突破HSSFWorkbook的65535行局限。其对应的是excel2007(1048576行，16384列)扩展名为“.xlsx”，最多可以导出104万行，不过这样就伴随着一个问题—OOM内存溢出，原因是你所创建的book sheet row cell等此时是存在内存的并没有持久化。</p>
+<h4 id="SXSSFWorkbook"><a href="#SXSSFWorkbook" class="headerlink" title="SXSSFWorkbook"></a>SXSSFWorkbook</h4><p>是操作Excel2007后的版本，扩展名是.xlsx；</p>
+<p>从POI 3.8版本开始，提供了一种基于XSSF的低内存占用的SXSSF方式。对于大型excel文件的创建，一个关键问题就是，要确保不会内存溢出。其实，就算生成很小的excel（比如几Mb），它用掉的内存是远大于excel文件实际的size的。如果单元格还有各种格式（比如，加粗，背景标红之类的），那它占用的内存就更多了。对于大型excel的创建且不会内存溢出的，就只有SXSSFWorkbook了。它的原理很简单，用硬盘空间换内存（就像hash map用空间换时间一样）。</p>
+<p>SXSSFWorkbook是streaming版本的XSSFWorkbook,它只会保存最新的excel rows在内存里供查看，在此之前的excel rows都会被写入到硬盘里（Windows电脑的话，是写入到C盘根目录下的temp文件夹）。被写入到硬盘里的rows是不可见的/不可访问的。只有还保存在内存里的才可以被访问到。</p>
+<p> SXSSF与XSSF的对比：</p>
+<ol>
+<li>在一个时间点上，只可以访问一定数量的数据</li>
+<li>不再支持Sheet.clone()</li>
+<li>不再支持公式的求值</li>
+<li>在使用Excel模板下载数据时将不能动态改变表头，因为这种方式已经提前把excel写到硬盘的了就不能再改了</li>
+<li>针对于大数据量的情况下使用SXSSF导出比XSSF导出效率要高得多。</li>
+</ol>
+<h3 id="三、SXSSFWorkbook导出excel示例"><a href="#三、SXSSFWorkbook导出excel示例" class="headerlink" title="三、SXSSFWorkbook导出excel示例"></a>三、SXSSFWorkbook导出excel示例</h3><ol>
+<li><p>引入依赖</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&lt;!--poi-ooxml--&gt;</span><br><span class="line">&lt;dependency&gt;</span><br><span class="line">    &lt;groupId&gt;org.apache.poi&lt;&#x2F;groupId&gt;</span><br><span class="line">    &lt;artifactId&gt;poi-ooxml&lt;&#x2F;artifactId&gt;</span><br><span class="line">    &lt;version&gt;3.9&lt;&#x2F;version&gt;</span><br><span class="line">&lt;&#x2F;dependency&gt;</span><br></pre></td></tr></table></figure></li>
+<li><p>编写SxssfWorkbookUtil</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">package com.yuanian.common.utils;</span><br><span class="line"></span><br><span class="line">import org.apache.poi.ss.usermodel.*;</span><br><span class="line">import org.apache.poi.ss.util.CellRangeAddress;</span><br><span class="line">import org.apache.poi.xssf.streaming.SXSSFWorkbook;</span><br><span class="line">import org.apache.poi.xssf.usermodel.*;</span><br><span class="line"></span><br><span class="line">import java.util.List;</span><br><span class="line">import java.util.Map;</span><br><span class="line"></span><br><span class="line">&#x2F;**</span><br><span class="line"> * @author zhahsh</span><br><span class="line"> * @date 2021&#x2F;1&#x2F;20</span><br><span class="line"> *&#x2F;</span><br><span class="line">public class SxssfWorkbookUtil &#123;</span><br><span class="line">    public static XSSFCellStyle headCellStyle;</span><br><span class="line"></span><br><span class="line">    &#x2F;**</span><br><span class="line">     * 设置单元格样式1</span><br><span class="line">     * @param sxssfWorkbook 工作簿</span><br><span class="line">     * @return 单元格样式</span><br><span class="line">     *&#x2F;</span><br><span class="line">    public static XSSFCellStyle getAndSetXSSFCellStyleOne(SXSSFWorkbook sxssfWorkbook) &#123;</span><br><span class="line">        XSSFCellStyle xssfCellStyle &#x3D; (XSSFCellStyle) sxssfWorkbook.createCellStyle();</span><br><span class="line">        XSSFDataFormat format &#x3D; (XSSFDataFormat) sxssfWorkbook.createDataFormat();</span><br><span class="line">        &#x2F;&#x2F; 是否自动换行</span><br><span class="line">        xssfCellStyle.setWrapText(false);</span><br><span class="line">        &#x2F;&#x2F; 水平居中</span><br><span class="line">        xssfCellStyle.setAlignment(HorizontalAlignment.CENTER);</span><br><span class="line">        &#x2F;&#x2F; 垂直居中</span><br><span class="line">        xssfCellStyle.setVerticalAlignment(VerticalAlignment.CENTER);</span><br><span class="line">        &#x2F;&#x2F; 前景颜色</span><br><span class="line">        xssfCellStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);</span><br><span class="line">        xssfCellStyle.setFillForegroundColor(IndexedColors.RED.getIndex());</span><br><span class="line">        &#x2F;&#x2F; 边框</span><br><span class="line">        xssfCellStyle.setBorderBottom(BorderStyle.THIN);</span><br><span class="line">        xssfCellStyle.setBorderRight(BorderStyle.THIN);</span><br><span class="line">        xssfCellStyle.setBorderTop(BorderStyle.THIN);</span><br><span class="line">        xssfCellStyle.setBorderLeft(BorderStyle.THIN);</span><br><span class="line">        xssfCellStyle.setBottomBorderColor(IndexedColors.BLACK.getIndex());</span><br><span class="line">        xssfCellStyle.setRightBorderColor(IndexedColors.BLACK.getIndex());</span><br><span class="line">        xssfCellStyle.setTopBorderColor(IndexedColors.BLACK.getIndex());</span><br><span class="line">        xssfCellStyle.setLeftBorderColor(IndexedColors.BLACK.getIndex());</span><br><span class="line">        &#x2F;&#x2F; 防止数字过长,excel导出后,显示为科学计数法,如:防止8615192053888被显示为8.61519E+12</span><br><span class="line">        xssfCellStyle.setDataFormat(format.getFormat(&quot;0&quot;));</span><br><span class="line">        return xssfCellStyle;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    &#x2F;**</span><br><span class="line">     * 设置单元格样式2</span><br><span class="line">     * @param sxssfWorkbook 工作簿</span><br><span class="line">     * @return 单元格样式</span><br><span class="line">     *&#x2F;</span><br><span class="line">    public static XSSFCellStyle getAndSetXSSFCellStyleTwo(SXSSFWorkbook sxssfWorkbook) &#123;</span><br><span class="line">        XSSFCellStyle xssfCellStyle &#x3D; (XSSFCellStyle) sxssfWorkbook.createCellStyle();</span><br><span class="line">        XSSFDataFormat format &#x3D; (XSSFDataFormat) sxssfWorkbook.createDataFormat();</span><br><span class="line">        &#x2F;&#x2F; 是否自动换行</span><br><span class="line">        xssfCellStyle.setWrapText(false);</span><br><span class="line">        &#x2F;&#x2F; 水平居中</span><br><span class="line">        xssfCellStyle.setAlignment(HorizontalAlignment.CENTER);</span><br><span class="line">        &#x2F;&#x2F; 边框</span><br><span class="line">        xssfCellStyle.setBorderBottom(BorderStyle.THIN);</span><br><span class="line">        xssfCellStyle.setBorderRight(BorderStyle.THIN);</span><br><span class="line">        xssfCellStyle.setBorderTop(BorderStyle.THIN);</span><br><span class="line">        xssfCellStyle.setBorderLeft(BorderStyle.THIN);</span><br><span class="line">        xssfCellStyle.setBottomBorderColor(IndexedColors.BLACK.getIndex());</span><br><span class="line">        xssfCellStyle.setRightBorderColor(IndexedColors.BLACK.getIndex());</span><br><span class="line">        xssfCellStyle.setTopBorderColor(IndexedColors.BLACK.getIndex());</span><br><span class="line">        xssfCellStyle.setLeftBorderColor(IndexedColors.BLACK.getIndex());</span><br><span class="line">        &#x2F;&#x2F; 垂直居中</span><br><span class="line">        xssfCellStyle.setVerticalAlignment(VerticalAlignment.CENTER);</span><br><span class="line">        &#x2F;&#x2F; 防止数字过长,excel导出后,显示为科学计数法,如:防止8615192053888被显示为8.61519E+12</span><br><span class="line">        xssfCellStyle.setDataFormat(format.getFormat(&quot;0&quot;));</span><br><span class="line">        return xssfCellStyle;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    &#x2F;**</span><br><span class="line">     * 获取并设置header样式</span><br><span class="line">     *&#x2F;</span><br><span class="line">    public static XSSFCellStyle getAndSetXSSFCellStyleHeader(SXSSFWorkbook sxssfWorkbook) &#123;</span><br><span class="line">        XSSFCellStyle headCellStyle &#x3D; (XSSFCellStyle) sxssfWorkbook.createCellStyle();</span><br><span class="line">        Font font &#x3D; sxssfWorkbook.createFont();</span><br><span class="line">        &#x2F;&#x2F; 字体大小</span><br><span class="line">        font.setFontHeightInPoints((short) 14);</span><br><span class="line">        &#x2F;&#x2F; 字体粗细</span><br><span class="line">        font.setBold(true);</span><br><span class="line">        &#x2F;&#x2F; 将字体应用到样式上面</span><br><span class="line">        headCellStyle.setFont(font);</span><br><span class="line">        return headCellStyle;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    &#x2F;**</span><br><span class="line">     * 根据sheet页和head内容填充sheet页头部</span><br><span class="line">     * @param sheet sheet页</span><br><span class="line">     * @param map 题头</span><br><span class="line">     *&#x2F;</span><br><span class="line">    public static final void createTableHeader(Sheet sheet, Map&lt;Integer, List&lt;ExcelBean&gt;&gt; map) &#123;</span><br><span class="line">        int startIndex &#x3D; 0;&#x2F;&#x2F;cell起始位置</span><br><span class="line">        int endIndex &#x3D; 0;&#x2F;&#x2F;cell终止位置</span><br><span class="line">        for (Map.Entry&lt;Integer, List&lt;ExcelBean&gt;&gt; entry : map.entrySet()) &#123;</span><br><span class="line">            Row row &#x3D; sheet.createRow(entry.getKey());</span><br><span class="line">            List&lt;ExcelBean&gt; excels &#x3D; entry.getValue();</span><br><span class="line">            for (int x &#x3D; 0; x &lt; excels.size(); x++) &#123;</span><br><span class="line">                &#x2F;&#x2F;合并单元格</span><br><span class="line">                if (excels.get(x).getCols() &gt; 1) &#123;</span><br><span class="line">                    if (x &#x3D;&#x3D; 0) &#123;</span><br><span class="line">                        endIndex +&#x3D; excels.get(x).getCols() - 1;</span><br><span class="line">                        CellRangeAddress range &#x3D; new CellRangeAddress(0, 0, startIndex, endIndex);</span><br><span class="line">                        sheet.addMergedRegion(range);</span><br><span class="line">                        startIndex +&#x3D; excels.get(x).getCols();</span><br><span class="line">                    &#125; else &#123;</span><br><span class="line">                        endIndex +&#x3D; excels.get(x).getCols();</span><br><span class="line">                        CellRangeAddress range &#x3D; new CellRangeAddress(0, 0, startIndex, endIndex);</span><br><span class="line">                        sheet.addMergedRegion(range);</span><br><span class="line">                        startIndex +&#x3D; excels.get(x).getCols();</span><br><span class="line">                    &#125;</span><br><span class="line">                    Cell cell &#x3D; row.createCell(x);</span><br><span class="line">                    cell.setCellValue(excels.get(x).getHeadTextName());&#x2F;&#x2F; 设置内容</span><br><span class="line">                    if (excels.get(x).getCellStyle() !&#x3D; null) &#123;</span><br><span class="line">                        cell.getCellStyle().cloneStyleFrom(excels.get(x).getCellStyle());&#x2F;&#x2F; 设置格式</span><br><span class="line">                    &#125;</span><br><span class="line">                    cell.getCellStyle().cloneStyleFrom(headCellStyle);</span><br><span class="line">                &#125; else &#123;</span><br><span class="line">                    Cell cell &#x3D; row.createCell(x);</span><br><span class="line">                    cell.setCellValue(excels.get(x).getHeadTextName());&#x2F;&#x2F; 设置内容</span><br><span class="line">                    cell.setCellStyle(headCellStyle);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure></li>
+<li><p>编写程序代码</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">while (rs.next())&#123;</span><br><span class="line"></span><br><span class="line">				&#x2F;&#x2F;当数据量超过1000000行的时候，重新生成一张sheet页，将剩余的数据网新的sheet页中写</span><br><span class="line">                if (rowIndex &gt;&#x3D; 1000000)&#123;</span><br><span class="line">                    temp++;</span><br><span class="line">                    Sheet sheet1 &#x3D; workbook.createSheet(&quot;转换数据&quot;.concat(String.valueOf(temp)));</span><br><span class="line">                    SxssfWorkbookUtil.createTableHeader(sheet1, map);</span><br><span class="line">                    sheets.add(sheet1);</span><br><span class="line">                    rowIndex &#x3D; 1;</span><br><span class="line">                &#125;</span><br><span class="line"></span><br><span class="line">                Row row &#x3D; sheets.get(temp).createRow(rowIndex);</span><br><span class="line">                int width &#x3D; 300;</span><br><span class="line">                for(int j&#x3D;0;j&lt;count;j++)&#123;</span><br><span class="line">                    Cell cell &#x3D; row.createCell(j);</span><br><span class="line">                    String value &#x3D; &quot;&quot;;</span><br><span class="line">                    if (ObjectUtil.isNotNull(rs.getObject(j+1)))&#123;</span><br><span class="line">                        value &#x3D; String.valueOf(rs.getObject(j+1));</span><br><span class="line">                    &#125;</span><br><span class="line">                    if (j &#x3D;&#x3D; count - 1)&#123;</span><br><span class="line">                        switch (value) &#123;</span><br><span class="line">                            &#x2F;&#x2F;0&#x3D;未转换；1&#x3D;转换成功；2&#x3D;存在未转换数据</span><br><span class="line">                            case &quot;0&quot;:</span><br><span class="line">                                value &#x3D; &quot;未转换&quot;;</span><br><span class="line">                                break;</span><br><span class="line">                            case &quot;1&quot;:</span><br><span class="line">                                value &#x3D; &quot;转换成功&quot;;</span><br><span class="line">                                break;</span><br><span class="line">                            case &quot;2&quot;:</span><br><span class="line">                                value &#x3D; &quot;存在未转换数据&quot;;</span><br><span class="line">                        &#125;</span><br><span class="line">                    &#125;</span><br><span class="line"></span><br><span class="line">                    cell.setCellType(STRING);</span><br><span class="line">                    cell.setCellValue(value);</span><br><span class="line">                    &#x2F;&#x2F; 获得最大列宽</span><br><span class="line">                    if (!StringUtils.isNULL(value)) &#123;</span><br><span class="line">                        width &#x3D; value.getBytes().length * 300;</span><br><span class="line">                        cell.setCellStyle(fontStyle2);</span><br><span class="line">                    &#125;else &#123;</span><br><span class="line"></span><br><span class="line">                        cell.setCellStyle(fontStyle1);</span><br><span class="line">                    &#125;</span><br><span class="line"></span><br><span class="line">                    &#x2F;&#x2F; 还未设置，设置当前</span><br><span class="line">                    if (widths.size() &lt;&#x3D; j) &#123;</span><br><span class="line">                        widths.add(width);</span><br><span class="line">                        continue;</span><br><span class="line">                    &#125;</span><br><span class="line">                    &#x2F;&#x2F; 比原来大，更新数据</span><br><span class="line">                    if (width &gt; widths.get(j)) &#123;</span><br><span class="line">                        widths.set(j, width);</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">                rowIndex++;</span><br><span class="line">            &#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+]]></content>
+      <categories>
+        <category>后端</category>
+        <category>Java</category>
+      </categories>
+      <tags>
+        <tag>Java</tag>
+        <tag>Excel导出</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>阻塞队列介绍</title>
+    <url>/2021/03/26/%E9%98%BB%E5%A1%9E%E9%98%9F%E5%88%97/</url>
+    <content><![CDATA[<p>本文主要介绍如何使用Nginx对单体web引用进行集群部署！</p>
+<a id="more"></a>
+
+<h3 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h3><p><strong>阻塞队列（BlockingQueue）</strong> 是一个支持两个附加操作的队列。这两个附加的操作是：在队列为空时，获取元素的线程会等待队列变为非空。当队列满时，存储元素的线程会等待队列可用。阻塞队列常用于生产者和消费者的场景，生产者是往队列里添加元素的线程，消费者是从队列里拿元素的线程。阻塞队列就是生产者存放元素的容器，而消费者也只从容器里拿元素。</p>
+<h3 id="java中的阻塞队列"><a href="#java中的阻塞队列" class="headerlink" title="java中的阻塞队列"></a>java中的阻塞队列</h3><table>
+<thead>
+<tr>
+<th>阻塞队列种类</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>ArrayBlockingQueue</strong></td>
+<td>一个由数组结构组成的有界阻塞队列</td>
+</tr>
+<tr>
+<td><strong>LinkedBlockingQueue</strong></td>
+<td>一个由链表结构组成的有界阻塞队列</td>
+</tr>
+<tr>
+<td><strong>PriorityBlockingQueue</strong></td>
+<td>一个支持优先级排序的无界阻塞队列</td>
+</tr>
+<tr>
+<td><strong>DelayQueue</strong></td>
+<td>一个使用优先级队列实现的无界阻塞队列</td>
+</tr>
+<tr>
+<td><strong>SynchronousQueue</strong></td>
+<td>一个不存储元素的阻塞队列</td>
+</tr>
+<tr>
+<td><strong>LinkedTransferQueue</strong></td>
+<td>一个由链表结构组成的无界阻塞队列</td>
+</tr>
+<tr>
+<td><strong>LinkedBlockingDeque</strong></td>
+<td>一个由链表结构组成的双向阻塞队列</td>
+</tr>
+</tbody></table>
+<p>在JDK提供的阻塞队列中，除了LinkedBlockingDeque 是一个 Deque（双向的队列），其实现的接口是 BlockingDeque；其余6个阻塞队列则是 Queue（单向队列），实现的接口是 BlockingQueue。</p>
+<h3 id="对于单向-BlockingQueue常用方法描述"><a href="#对于单向-BlockingQueue常用方法描述" class="headerlink" title="对于单向 BlockingQueue常用方法描述"></a>对于单向 <strong>BlockingQueue</strong>常用方法描述</h3><p><img src="http://qiniu.zhahongsheng.top//image/image-20210326120241742.png" alt="image-20210326120241742"></p>
+<p>上述方法中，remove、element、offer、poll、peek都是属于Queue接口，其中add、remove、element在操作队列的时候，如果没有达到目的会抛出异常。而offer、poll、peek则只是给出一个操作状态的提示。</p>
+<p>而对于take和put两种方法则会在有阻塞时，等待队列达到操作要求，完成操作，而不是直接返回结果。</p>
+<h3 id="对于四种单向队列解释"><a href="#对于四种单向队列解释" class="headerlink" title="对于四种单向队列解释"></a>对于四种单向队列解释</h3><ol>
+<li><p>LinkedBlockingQueue</p>
+<p>LinkedBlockingQueue的容量在不指定的情况下为 Integer.MAX_VALUE，但是也可以指定其最大容量，其中主要用到 put 和 take 方法，它是基于链表的队列，此队列按 FIFO （先进先出）排序元素，是线程安全的。</p>
+</li>
+<li><p>ArrayBlockingQueue</p>
+<p>ArrayBlockingQueue在构造时需要指定容量，并可以选择是否需要公平性，如果公平参数被设置为 true，等待时间最长的线程会优先得到处理（其实就是通过将 ReentrantLock 设置为 true 来达到这种公平性：即等待时间最长的线程会先操作）。通常，公平性会使你在性能上付出代价，只有在的确非常需要的时候再使用它。它是基于数组的阻塞循环队列，此队列按 FIFO（先进先出）原则对元素进行排序</p>
+</li>
+<li><p>PriorityBlockingQueue</p>
+<p>PriorityBlockingQueue是一个带优先级的 队列，而不是先进先出队列。元素按优先级顺序被移除，该队列也没有上限（看了一下源码，PriorityBlockingQueue是对 PriorityQueue的再次包装，是基于堆数据结构的，而PriorityQueue是没有容量限制的，与ArrayList一样，所以在优先阻塞 队列上put时是不会受阻的。虽然此队列逻辑上是无界的，但是由于资源被耗尽，所以试图执行添加操作可能会导致 OutOfMemoryError），但是如果队列为空，那么取元素的操作take就会阻塞，所以它的检索操作take是受阻的。另外，往入该队列中的元 素要具有比较能力。</p>
+</li>
+<li><p>DelayQueue</p>
+<p>DelayQueue（基于PriorityQueue来实现的）是一个存放Delayed 元素的无界阻塞队列，只有在延迟期满时才能从中提取元素。该队列的头部是延迟期满后保存时间最长的 Delayed 元素。如果延迟都还没有期满，则队列没有头部，并且poll将返回null。当一个元素的 getDelay(TimeUnit.NANOSECONDS) 方法返回一个小于或等于零的值时，则出现期满，poll就以移除这个元素了。此队列不允许使用 null 元素。</p>
+</li>
+</ol>
+<h3 id="阻塞队列的实现原理"><a href="#阻塞队列的实现原理" class="headerlink" title="阻塞队列的实现原理"></a>阻塞队列的实现原理</h3><p>阻塞队列实际上是使用通知模式实现的，即当生产者在往满的队列里添加元素时会阻塞生产者，当消费者消费了一个队列中的元素的时候会通知生产者当前队列可用，可以继续生产了。</p>
+]]></content>
+      <categories>
+        <category>后端</category>
+        <category>数据结构</category>
+      </categories>
+      <tags>
+        <tag>队列</tag>
+        <tag>阻塞队列</tag>
       </tags>
   </entry>
   <entry>
