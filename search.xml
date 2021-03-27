@@ -8,10 +8,10 @@
 
 <h3 id="一、下载Nginx服务器"><a href="#一、下载Nginx服务器" class="headerlink" title="一、下载Nginx服务器"></a>一、下载Nginx服务器</h3><p>下载地址：<a href="http://nginx.org/">http://nginx.org/</a></p>
 <p>在此地址下面选择稳定版本的Nginx下载到本地，解压出来</p>
-<p><img src="http://qn34ieo15.hn-bkt.clouddn.com/image/image-20210111192526668.png" alt="image-20210111192526668"></p>
-<p><img src="http://qn34ieo15.hn-bkt.clouddn.com/image/image-20210111193114761.png" alt="image-20210111193114761"></p>
+<p><img src="http://qiniu.zhahongsheng.top//image/image-20210111192526668.png" alt="image-20210111192526668"></p>
+<p><img src="http://qiniu.zhahongsheng.top//image/image-20210111193114761.png" alt="image-20210111193114761"></p>
 <h3 id="二、测试Nginx服务"><a href="#二、测试Nginx服务" class="headerlink" title="二、测试Nginx服务"></a>二、测试Nginx服务</h3><p>解压好Nginx后直接双机Nginx.exe文件，启动Nginx，在浏览器中输入localhost，如果出现以下页面则证明Nginx已经成功启动。</p>
-<p><img src="http://qn34ieo15.hn-bkt.clouddn.com/image/image-20210111195645028.png" alt="image-20210111195645028"></p>
+<p><img src="http://qiniu.zhahongsheng.top//image/image-20210111195645028.png" alt="image-20210111195645028"></p>
 <h3 id="三、修改Nginx配置文件"><a href="#三、修改Nginx配置文件" class="headerlink" title="三、修改Nginx配置文件"></a>三、修改Nginx配置文件</h3><p>修改Nginx中conf文件下的nginx.conf文件</p>
 <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line"># 根据服务器性能进行权重设置</span><br><span class="line">    upstream wgf.com&#123; </span><br><span class="line">        server 127.0.0.1:8090  weight&#x3D;3;    #真实服务器A(sxwgf-PC)</span><br><span class="line">        server 127.0.0.1:8091  weight&#x3D;1;    #真实服务器B(sxwgf-PC)</span><br><span class="line">    &#125; </span><br></pre></td></tr></table></figure>
 <p>首先在http下面添加集群部署配置文件，如上面代码所示，如果有多个不同的web服务器，只需要将相关地址按照上面所示格式加进去即可 ，若是不同服务器性能不同，也可按照服务器的新能好坏，对对应的服务分配不同的权限，以均衡不同服务器的访问情况。</p>
@@ -91,7 +91,7 @@
 <li>突出缺点是不适应用户需求的变化</li>
 </ol>
 <h3 id="2-新型项目生命周期"><a href="#2-新型项目生命周期" class="headerlink" title="2.新型项目生命周期"></a>2.新型项目生命周期</h3><p>快速的实现一个产品所需的<strong>主要功能</strong>然后推向市场，根据用户的反馈和需求不停的对产品的功能进行迭代</p>
-<p><img src="C:\Users\zhahongsheng\AppData\Roaming\Typora\typora-user-images\image-20201225171608660.png" alt="image-20201225171608660"></p>
+<p><img src="http://qiniu.zhahongsheng.top//image/image-20201225171608660.png" alt="image-20201225171608660"></p>
 <h5 id="优点：-1"><a href="#优点：-1" class="headerlink" title="优点："></a>优点：</h5><ol>
 <li>注重市场快速反应能力，也即具体应对能力，客户前期满意度高。</li>
 </ol>
@@ -159,7 +159,7 @@
 <li>Excel 2007-2010版本。一张表最大支持<strong>1048576</strong>行，16384列；</li>
 <li>在针对超过1048576的数据量的数据导出的时候，就不能简单的导出到Excel的单个sheet页中了，必须得采用程序拆分的方式将数据存放到不同的sheet中，如下图所示：</li>
 </ol>
-<p><img src="http://qn34ieo15.hn-bkt.clouddn.com/image/image-20210120203429998.png" alt="image-20210120203429998"></p>
+<p><img src="http://qiniu.zhahongsheng.top//image/image-20210120203429998.png" alt="image-20210120203429998"></p>
 <p>在对一个sheet表中存储数据超过一定数据量的时候，将剩下的数据存放在一个新的sheet页中。</p>
 <h3 id="二、HSSFworkbook-XSSFworkbook-SXSSFworkbook区别"><a href="#二、HSSFworkbook-XSSFworkbook-SXSSFworkbook区别" class="headerlink" title="二、HSSFworkbook,XSSFworkbook,SXSSFworkbook区别"></a>二、HSSFworkbook,XSSFworkbook,SXSSFworkbook区别</h3><h4 id="HSSFworkbook"><a href="#HSSFworkbook" class="headerlink" title="HSSFworkbook"></a>HSSFworkbook</h4><p>是操作Excel2003以前（包括2003）的版本，扩展名是.xls；</p>
 <p>poi导出excel最常用的方式；但是此种方式的局限就是导出的行数至多为65535行，超出65536条后系统就会报错。此方式因为行数不足七万行所以一般不会发生内存不足的情况（OOM）</p>
@@ -314,7 +314,7 @@
 </blockquote>
 </blockquote>
 <blockquote>
-<p><img src="C:\Users\zhahongsheng\Documents\1584882177504.png" alt="1584882177504"></p>
+<p><img src="http://qiniu.zhahongsheng.top/1584882177504.png" alt="1584882177504"></p>
 </blockquote>
 <blockquote>
 <h2 id="Java内存模式会带来什么问题"><a href="#Java内存模式会带来什么问题" class="headerlink" title="Java内存模式会带来什么问题"></a>Java内存模式会带来什么问题</h2></blockquote>
