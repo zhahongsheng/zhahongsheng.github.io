@@ -381,4 +381,80 @@
         <tag>中文乱码</tag>
       </tags>
   </entry>
+  <entry>
+    <title>linux系统安装JDK的几种方法</title>
+    <url>/2021/03/26/linux%E7%B3%BB%E7%BB%9F%E5%AE%89%E8%A3%85JDK%E7%9A%84%E5%87%A0%E7%A7%8D%E6%96%B9%E6%B3%95/</url>
+    <content><![CDATA[<p>本文主要介绍再Linux系统下面如何安装jdk，提供了我们常用的集中安装过方式，各位可以借鉴适合自己的方式安装jdk！</p>
+<a id="more"></a>
+
+
+<h3 id="方法一：手动解压tar压缩包"><a href="#方法一：手动解压tar压缩包" class="headerlink" title="方法一：手动解压tar压缩包"></a>方法一：手动解压tar压缩包</h3><ol>
+<li><p>通过工具连接远程服务器或者虚拟机，选择一个文件夹下创建java目录</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# mkdir&#x2F;usr&#x2F;java</span><br><span class="line">[root@localhost ~]# cd &#x2F;usr&#x2F;java</span><br></pre></td></tr></table></figure></li>
+<li><p>上传下载好的以tar.gz结尾的JDK压缩包到创建的java目录文件夹下面，使用命令解压压缩包</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">[root@localhost java]# tar -zxvf jdk-8u281-linux-x64.tar.gz</span><br></pre></td></tr></table></figure></li>
+<li><p>设置环境变量</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">[root@localhost java]# vi &#x2F;etc&#x2F;profile</span><br></pre></td></tr></table></figure>
+<p>在profile文件中添加如下内容：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">#set java environment</span><br><span class="line">JAVA_HOME&#x3D;&#x2F;usr&#x2F;java&#x2F;jdk1.7.0_79</span><br><span class="line">JRE_HOME&#x3D;&#x2F;usr&#x2F;java&#x2F;jdk1.7.0_79&#x2F;jre</span><br><span class="line">CLASS_PATH&#x3D;.:$JAVA_HOME&#x2F;lib&#x2F;dt.jar:$JAVA_HOME&#x2F;lib&#x2F;tools.jar:$JRE_HOME&#x2F;lib</span><br><span class="line">PATH&#x3D;$PATH:$JAVA_HOME&#x2F;bin:$JRE_HOME&#x2F;bin</span><br><span class="line">export JAVA_HOME JRE_HOME CLASS_PATH PATH</span><br></pre></td></tr></table></figure>
+<p>在通过命令或者重其服务器使其生效：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">[root@localhost java]# source &#x2F;etc&#x2F;profile</span><br></pre></td></tr></table></figure></li>
+<li><p>验证JDK有效性</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">[root@localhost java]# java -version</span><br><span class="line">java version &quot;1.7.0_79&quot;</span><br><span class="line">Java(TM) SE Runtime Environment (build 1.7.0_79-b15)</span><br><span class="line">Java HotSpot(TM) 64-Bit Server VM (build 24.79-b02, mixed mode)</span><br></pre></td></tr></table></figure>
+<p>若输入命令，出现以下信息，则代表JDK安装成功。</p>
+</li>
+</ol>
+<h3 id="方法二：利用yum安装JDK（centos）"><a href="#方法二：利用yum安装JDK（centos）" class="headerlink" title="方法二：利用yum安装JDK（centos）"></a>方法二：利用yum安装JDK（centos）</h3><p>使用yum安装只能是安装yum库中已有的一些JDK，目前库里面只有openjdk</p>
+<ol>
+<li><p>使用命令查看yum库中含有哪些jdk版本（openjdk）</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">[root@hostname ~]# yum search java|grep jdk</span><br><span class="line">Repodata is over 2 weeks old. Install yum-cron? Or run: yum makecache fast</span><br><span class="line">ldapjdk-javadoc.noarch : Javadoc for ldapjdk</span><br><span class="line">java-1.6.0-openjdk.x86_64 : OpenJDK Runtime Environment</span><br><span class="line">java-1.6.0-openjdk-demo.x86_64 : OpenJDK Demos</span><br><span class="line">java-1.6.0-openjdk-devel.x86_64 : OpenJDK Development Environment</span><br><span class="line">java-1.6.0-openjdk-javadoc.x86_64 : OpenJDK API Documentation</span><br><span class="line">java-1.6.0-openjdk-src.x86_64 : OpenJDK Source Bundle</span><br><span class="line">java-1.7.0-openjdk.x86_64 : OpenJDK Runtime Environment</span><br><span class="line">java-1.7.0-openjdk-accessibility.x86_64 : OpenJDK accessibility connector</span><br><span class="line">java-1.7.0-openjdk-demo.x86_64 : OpenJDK Demos</span><br><span class="line">java-1.7.0-openjdk-devel.x86_64 : OpenJDK Development Environment</span><br><span class="line">java-1.7.0-openjdk-headless.x86_64 : The OpenJDK runtime environment without</span><br><span class="line">java-1.7.0-openjdk-javadoc.noarch : OpenJDK API Documentation</span><br><span class="line">java-1.7.0-openjdk-src.x86_64 : OpenJDK Source Bundle</span><br><span class="line">java-1.8.0-openjdk.i686 : OpenJDK Runtime Environment 8</span><br><span class="line">java-1.8.0-openjdk.x86_64 : OpenJDK 8 Runtime Environment</span><br><span class="line">java-1.8.0-openjdk-accessibility.i686 : OpenJDK accessibility connector</span><br><span class="line">java-1.8.0-openjdk-accessibility.x86_64 : OpenJDK accessibility connector</span><br><span class="line">java-1.8.0-openjdk-demo.i686 : OpenJDK Demos 8</span><br><span class="line">java-1.8.0-openjdk-demo.x86_64 : OpenJDK 8 Demos</span><br><span class="line">java-1.8.0-openjdk-devel.i686 : OpenJDK Development Environment 8</span><br><span class="line">java-1.8.0-openjdk-devel.x86_64 : OpenJDK 8 Development Environment</span><br><span class="line">java-1.8.0-openjdk-headless.i686 : OpenJDK Headless Runtime Environment 8</span><br><span class="line">java-1.8.0-openjdk-headless.x86_64 : OpenJDK 8 Headless Runtime Environment</span><br><span class="line">java-1.8.0-openjdk-javadoc.noarch : OpenJDK 8 API documentation</span><br><span class="line">java-1.8.0-openjdk-javadoc-zip.noarch : OpenJDK 8 API documentation compressed</span><br><span class="line">java-1.8.0-openjdk-src.i686 : OpenJDK Source Bundle 8</span><br><span class="line">java-1.8.0-openjdk-src.x86_64 : OpenJDK 8 Source Bundle</span><br><span class="line">java-11-openjdk.i686 : OpenJDK Runtime Environment 11</span><br><span class="line">java-11-openjdk.x86_64 : OpenJDK 11 Runtime Environment</span><br><span class="line">java-11-openjdk-demo.i686 : OpenJDK Demos 11</span><br><span class="line">java-11-openjdk-demo.x86_64 : OpenJDK 11 Demos</span><br><span class="line">java-11-openjdk-devel.i686 : OpenJDK Development Environment 11</span><br><span class="line">java-11-openjdk-devel.x86_64 : OpenJDK 11 Development Environment</span><br><span class="line">java-11-openjdk-headless.i686 : OpenJDK Headless Runtime Environment 11</span><br><span class="line">java-11-openjdk-headless.x86_64 : OpenJDK 11 Headless Runtime Environment</span><br><span class="line">java-11-openjdk-javadoc.i686 : OpenJDK 11 API documentation</span><br><span class="line">java-11-openjdk-javadoc.x86_64 : OpenJDK 11 API documentation</span><br><span class="line">java-11-openjdk-javadoc-zip.i686 : OpenJDK 11 API documentation compressed in a</span><br><span class="line">java-11-openjdk-javadoc-zip.x86_64 : OpenJDK 11 API documentation compressed in</span><br><span class="line">java-11-openjdk-jmods.i686 : JMods for OpenJDK 11</span><br><span class="line">java-11-openjdk-jmods.x86_64 : JMods for OpenJDK 11</span><br><span class="line">java-11-openjdk-src.i686 : OpenJDK Source Bundle 11</span><br><span class="line">java-11-openjdk-src.x86_64 : OpenJDK 11 Source Bundle</span><br><span class="line">java-11-openjdk-static-libs.i686 : OpenJDK libraries for static linking 11</span><br><span class="line">java-11-openjdk-static-libs.x86_64 : OpenJDK 11 libraries for static linking</span><br><span class="line">java-latest-openjdk.x86_64 : OpenJDK 15 Runtime Environment</span><br><span class="line">java-latest-openjdk-debug.x86_64 : OpenJDK 15 Runtime Environment with full</span><br><span class="line">java-latest-openjdk-demo.x86_64 : OpenJDK 15 Demos</span><br><span class="line">java-latest-openjdk-demo-debug.x86_64 : OpenJDK 15 Demos with full debugging on</span><br><span class="line">java-latest-openjdk-demo-fastdebug.x86_64 : OpenJDK 15 Demos with minimal</span><br><span class="line">java-latest-openjdk-devel.x86_64 : OpenJDK 15 Development Environment</span><br><span class="line">java-latest-openjdk-devel-debug.x86_64 : OpenJDK 15 Development Environment with</span><br><span class="line">java-latest-openjdk-devel-fastdebug.x86_64 : OpenJDK 15 Development Environment</span><br><span class="line">java-latest-openjdk-fastdebug.x86_64 : OpenJDK 15 Runtime Environment with</span><br><span class="line">java-latest-openjdk-headless.x86_64 : OpenJDK 15 Headless Runtime Environment</span><br><span class="line">java-latest-openjdk-headless-debug.x86_64 : OpenJDK 15 Runtime Environment with</span><br><span class="line">java-latest-openjdk-headless-fastdebug.x86_64 : OpenJDK 15 Runtime Environment</span><br><span class="line">java-latest-openjdk-javadoc.x86_64 : OpenJDK 15 API documentation</span><br><span class="line">java-latest-openjdk-javadoc-zip.x86_64 : OpenJDK 15 API documentation compressed</span><br><span class="line">java-latest-openjdk-jmods.x86_64 : JMods for OpenJDK 15</span><br><span class="line">java-latest-openjdk-jmods-debug.x86_64 : JMods for OpenJDK 15 with full</span><br><span class="line">java-latest-openjdk-jmods-fastdebug.x86_64 : JMods for OpenJDK 15 with minimal</span><br><span class="line">java-latest-openjdk-src.x86_64 : OpenJDK 15 Source Bundle</span><br><span class="line">java-latest-openjdk-src-debug.x86_64 : OpenJDK 15 Source Bundle for packages</span><br><span class="line">java-latest-openjdk-src-fastdebug.x86_64 : OpenJDK 15 Source Bundle</span><br><span class="line">java-latest-openjdk-static-libs.x86_64 : OpenJDK 15 libraries for static linking</span><br><span class="line">java-latest-openjdk-static-libs-debug.x86_64 : OpenJDK 15 libraries for static</span><br><span class="line">java-latest-openjdk-static-libs-fastdebug.x86_64 : OpenJDK 15 libraries for</span><br><span class="line">ldapjdk.noarch : The Mozilla LDAP Java SDK</span><br><span class="line"></span><br></pre></td></tr></table></figure></li>
+<li><p>从上述提供的版本中选择合适的版本进行安装，直接使用以下命令即可：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# yum install OpenJDK 8 Source Bundle</span><br></pre></td></tr></table></figure>
+<p>使用此命令安装的默认安装位置是在 /usr/lib/jvm/路径下面，文件夹对应的就是安装包文件名</p>
+</li>
+<li><p>设置环境变量</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# vi &#x2F;etc&#x2F;profile</span><br></pre></td></tr></table></figure>
+<p>在profile文件中添加以下内容</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">JAVA_HOME&#x3D;&#x2F;usr&#x2F;lib&#x2F;jvm&#x2F;java-1.7.0-openjdk-1.7.0.75.x86_64</span><br><span class="line">JRE_HOME&#x3D;$JAVA_HOME&#x2F;jre</span><br><span class="line">CLASS_PATH&#x3D;.:$JAVA_HOME&#x2F;lib&#x2F;dt.jar:$JAVA_HOME&#x2F;lib&#x2F;tools.jar:$JRE_HOME&#x2F;lib</span><br><span class="line">PATH&#x3D;$PATH:$JAVA_HOME&#x2F;bin:$JRE_HOME&#x2F;bin</span><br><span class="line">export JAVA_HOME JRE_HOME CLASS_PATH PATH</span><br></pre></td></tr></table></figure>
+<p>上面第一行的最后内容与自己安装位置下JDK文件夹的名称一致即可</p>
+<p>使用命令使其生效：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">[root@localhost java]# source &#x2F;etc&#x2F;profile</span><br></pre></td></tr></table></figure></li>
+<li><p>验证是否安装成功与第一步方法一致</p>
+</li>
+</ol>
+<h3 id="方法三：采用apt-get安装（ubuntu）"><a href="#方法三：采用apt-get安装（ubuntu）" class="headerlink" title="方法三：采用apt-get安装（ubuntu）"></a>方法三：采用apt-get安装（ubuntu）</h3><p>此种方式安装的jdk也是安装的openjdk</p>
+<ol>
+<li><p>使用命令直接安装openjdk8</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line"># 切换至root用户</span><br><span class="line">sudo su root</span><br><span class="line"># 更新linux仓库</span><br><span class="line">apt-get update</span><br><span class="line"># 下载openjdk8</span><br><span class="line">apt-get install openjdk-8-jdk</span><br></pre></td></tr></table></figure></li>
+<li><p>安装完成后，查看jdk版本</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">java -version</span><br></pre></td></tr></table></figure>
+<p><img src="http://qiniu.zhahongsheng.top//image/2018103116260425.png" alt="img"></p>
+<p>若出现上述显示代表安装成功</p>
+</li>
+</ol>
+<h3 id="方法四：采用rpm方式安装"><a href="#方法四：采用rpm方式安装" class="headerlink" title="方法四：采用rpm方式安装"></a>方法四：采用rpm方式安装</h3><ol>
+<li><p>下载rpm软件包，这里下载的是jdk-8u281-linux-x64.rpm,对应的下载可直接到官网下载，此处提供我本地网盘的一个连接</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">链接：https:&#x2F;&#x2F;pan.baidu.com&#x2F;s&#x2F;1--kyxdFMzCN9vqsEzkS96g </span><br><span class="line">提取码：d2hy </span><br></pre></td></tr></table></figure></li>
+<li><p>下载好rpm包后直接上传至服务器对应需要安装的位置，通过ll命令查看，若显示绿色则代表是可执行文件，否则没有权限，需先修改文件权限，命令如下：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">[root@xx-4 ~]# chmod 755 jdk-8u281-linux-x64.rpm</span><br></pre></td></tr></table></figure>
+<p>执行完上述命令后再通过ll命令查看会发现对应的文件变成了绿色。</p>
+</li>
+<li><p>使用rpm命令进行安装：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">[root@xx-4 ~]# rpm -ivh jdk-8u281-linux-x64.rpm</span><br></pre></td></tr></table></figure>
+<p>等待安装完成。</p>
+</li>
+<li><p>查看jdk安装路径</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">[root@xx-4 ~]# rpm -ql jdk</span><br></pre></td></tr></table></figure></li>
+<li><p>记住jdk的安装路径，使用上面提到的方式设置JAVA_HOME环境变量到path路径下面。</p>
+</li>
+</ol>
+]]></content>
+      <categories>
+        <category>软件安装</category>
+      </categories>
+      <tags>
+        <tag>软件安装</tag>
+        <tag>JDK</tag>
+      </tags>
+  </entry>
 </search>
