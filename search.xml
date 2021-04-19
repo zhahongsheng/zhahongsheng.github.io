@@ -457,4 +457,102 @@
         <tag>JDK</tag>
       </tags>
   </entry>
+  <entry>
+    <title>Structs常见面试题</title>
+    <url>/2021/04/19/Struts%E9%9D%A2%E8%AF%95/</url>
+    <content><![CDATA[<p>本文主要列举了一些关于structs的常见面试题！</p>
+<a id="more"></a>
+
+<h4 id="SpringMVC与Struts2的主要区别？"><a href="#SpringMVC与Struts2的主要区别？" class="headerlink" title="SpringMVC与Struts2的主要区别？"></a>SpringMVC与Struts2的主要区别？</h4><ol>
+<li><p>springmvc的入口是一个servlet即前端控制器，而struts2入口是一个filter过虑器。</p>
+</li>
+<li><p>springmvc是基于方法开发，传递参数是通过方法形参，可以设计为单例或多例(建议单例)，struts2是基于类开发，传递参数是通过类的属性，只能设计为多例。 </p>
+</li>
+<li><p>Struts采用值栈存储请求和响应的数据，通过OGNL存取数据， springmv。</p>
+</li>
+</ol>
+<h4 id="Struts2中如何访问HttpServletRequest、HttpSession和ServletContext三个域对象？"><a href="#Struts2中如何访问HttpServletRequest、HttpSession和ServletContext三个域对象？" class="headerlink" title="Struts2中如何访问HttpServletRequest、HttpSession和ServletContext三个域对象？"></a>Struts2中如何访问HttpServletRequest、HttpSession和ServletContext三个域对象？</h4><ol>
+<li><p>通过ServletActionContext的方法获得；</p>
+</li>
+<li><p>通过ServletRequestAware、SessionAware和ServletContextAware接口注入Struts2中如何访问HttpServletRequest、HttpSession和ServletContext三个域对象？</p>
+</li>
+</ol>
+<h4 id="Struts2中的拦截器有什么用途？"><a href="#Struts2中的拦截器有什么用途？" class="headerlink" title="Struts2中的拦截器有什么用途？"></a>Struts2中的拦截器有什么用途？</h4><p>java里的拦截器是动态拦截Action调用的对象，它提供了一种机制可以使开发者定义一个action执行的前后执行的代码，也可以在一个action执行前阻止其执行，同时也提供了一种可以提取action中可重用部分的方式。</p>
+<p>在AOP(Aspect Oriented Programming)中拦截器用于在某个方法或字段被访问之前，进行拦截后在之前或之后加入某些操作</p>
+<p>1）struts2中的功能(参数处理、文件上传、字符编码等)都是通过系统拦截器实现的</p>
+<p>2）当然我们也可以自定义拦截器，进行可插拔配置，可以执行Action的方法前后，加入相关逻辑完成业务。</p>
+<p>使用场景：</p>
+<p>1）用户登录判断，在执行action的前面判断是否已经登录，如果没有登录的就跳转登录页面。</p>
+<p>2）用户权限判断，在执行action的前面判断是否具有，如果没有权限就给出提示信息。</p>
+<p>3）操作日志…</p>
+<h4 id="Struts2中的默认包struts-default有什么作用？"><a href="#Struts2中的默认包struts-default有什么作用？" class="headerlink" title="Struts2中的默认包struts-default有什么作用？"></a>Struts2中的默认包struts-default有什么作用？</h4><p>它定义了Struts2内部的众多拦截器和Result类型，而Struts2很多核心的功能是通过这些内置的拦截器实现，如：从请求中把参数封装到action、文件上传和数据校验等等，都是通过拦截器实现的。在Struts2的配置文件中，自定义的包，继承了struts-default包，就可以使用Struts2为我们提供这些功能</p>
+<h4 id="Struts2中，Action并没有直接收到用户的请求，那它为什么可以处理用户的请求？又凭什么知道一个请求到底交给哪一个Action来处理？"><a href="#Struts2中，Action并没有直接收到用户的请求，那它为什么可以处理用户的请求？又凭什么知道一个请求到底交给哪一个Action来处理？" class="headerlink" title="Struts2中，Action并没有直接收到用户的请求，那它为什么可以处理用户的请求？又凭什么知道一个请求到底交给哪一个Action来处理？"></a>Struts2中，Action并没有直接收到用户的请求，那它为什么可以处理用户的请求？又凭什么知道一个请求到底交给哪一个Action来处理？</h4><p>（1）Struts2的核心过滤器收到用户的请求后，会对用户的请求进行简单的预处理（如解析、封装参数），然后通过反射来创建Action实例，并调用Action中指定的方法来处理用户请求。</p>
+<p>（2）通知具体调用哪个Action来处理请求的方式，有两种：</p>
+<p>   ①利用配置文件，Struts.xml中配置的<action>标签来确定；</p>
+<p>   ②利用约定，Struts2中可以使用约定（convention）插件。例如：约定xxx总是对应XxxAction，这是对约定优于配置理念的践行;</p>
+<h4 id="Struts2中，Action通过什么方式获取用户从页面输入的数据，又是通过什么方法把数据传给视图层显示的？"><a href="#Struts2中，Action通过什么方式获取用户从页面输入的数据，又是通过什么方法把数据传给视图层显示的？" class="headerlink" title="Struts2中，Action通过什么方式获取用户从页面输入的数据，又是通过什么方法把数据传给视图层显示的？"></a>Struts2中，Action通过什么方式获取用户从页面输入的数据，又是通过什么方法把数据传给视图层显示的？</h4><p>（1）Action从页面获取数据的方式有三种：</p>
+<p>​      ①通过Action属性接收参数；（例：${pageContext.request.contextPath}/***.action? id=xxxx）</p>
+<p>​      ②通过域模型获取参数；（例：ServletActionContext.getRequest().getParameter(arg0)）</p>
+<p>​      ③通过模型驱动获取参数（例：extends ModelDriven<T>）</p>
+<p>（2）Action将数据存入值栈（Value Stack）中，视图可以通过表达式语言（EL）从值栈中获取；</p>
+<h4 id="struts2的执行流程"><a href="#struts2的执行流程" class="headerlink" title="struts2的执行流程"></a>struts2的执行流程</h4><p>一个请求在struts2框架中处理大概分为一下几个步骤：</p>
+<p>1）客户浏览器发送一个指向Servlet容器（例如Tomcat）的请求</p>
+<p>2）这个请求经过一系列的过滤器（Filter）（这些过滤器中有一个叫做ActionContextCleanUp的可选过滤器，这个过滤器对于Struts2和其他框架的集成很有帮助，例如：SiteMesh Plugin）</p>
+<p>3）接着FilterDispatcher(StrutsPrepareAndExecuteFilter)被调用，FilterDispatcher询问ActionMapper来决定这个请是否需要调用某个Action</p>
+<p>4）如果ActionMapper决定需要调用某个Action，FilterDispatcher把请求的处理交给ActionProxy</p>
+<p>5）ActionProxy通过Configuration Manager询问框架的配置文件，找到需要调用的Action类</p>
+<p>6）ActionProxy创建一个ActionInvocation的实例。</p>
+<p>7）ActionInvocation实例使用命名模式来调用，在调用Action的过程前后，涉及到相关拦截器（Intercepter）的调用。</p>
+<p>8）一旦Action执行完毕，ActionInvocation负责根据struts.xml中的配置找到对应的返回结果。返回结果通常是（但不总是，也 可 能是另外的一个Action链）一个需要被表示的JSP或者FreeMarker的模版。在表示的过程中可以使用Struts2 框架中继承的标签。在这个过程中需要涉及到ActionMapper</p>
+<h4 id="具有相同名称的一组值，struts2如何实现封装"><a href="#具有相同名称的一组值，struts2如何实现封装" class="headerlink" title="具有相同名称的一组值，struts2如何实现封装"></a>具有相同名称的一组值，struts2如何实现封装</h4><p>①对于String类型，Struts2会采用“，　”方法进行字符串连接。</p>
+<p>如：23ad, 43e4, 65ds…..</p>
+<p>解决：  String ids[] = model.getId().split(“, “);</p>
+<p>//调用业务方法，实现批量删除</p>
+<p>deptService.delete(Dept.class, ids);</p>
+<p>②对于Integer,Float,Date类型，Struts2默认接收的是最后一个值；</p>
+<p>如：客户端给id传了三个值，id=3、id=4、id=5….服务器只能接受最后一个值，就是id=5</p>
+<p>解决：private List<Integer> ids;//生成它的getter与setter</p>
+<h4 id="简述struts2值栈的原理和生命周期？"><a href="#简述struts2值栈的原理和生命周期？" class="headerlink" title="简述struts2值栈的原理和生命周期？"></a>简述struts2值栈的原理和生命周期？</h4><p>Value-Stack贯穿整个Action的生命周期，保存在request作用域中，所以它和request的生命周期一样。当Struts2接受一个请求时，会创建ActionContext、Value-Stack和Action对象，然后把Action存放进Value-Stack，所以Action的实例变量可以通过OGNL访问。由于Action是多实例的，和使用单例的Servlet不同，每个Action都有一个对应的Value-Stack，Value-Stack存放的数据类型是该Action的实例，以及该Action中的实例变量，Action对象默认保存在栈顶。</p>
+<h4 id="简述Struts2异常处理机制？"><a href="#简述Struts2异常处理机制？" class="headerlink" title="简述Struts2异常处理机制？"></a>简述Struts2异常处理机制？</h4><p>Struts2提供了声明式的异常处理机制，可以在配置文件中加入如下代码：</p>
+<!-- 配置全局结果视图 -->
+
+<global-results>
+
+<pre><code>       &lt;result name=&quot;error&quot;&gt;/WEB-INF/pages/error.jsp&lt;/result&gt;</code></pre>
+</global-results>
+
+<!-- struts2自带异常处理配置-->
+
+<global-exception-mappings>
+
+<pre><code>         &lt;exception-mapping result=&quot;error&quot; exception=&quot;cn.wuliaokankan.exception.SysException&quot;&gt;&lt;/exception-mapping&gt;
+
+         &lt;exception-mapping result=&quot;error&quot; exception=&quot;java.lang.Exception&quot;&gt;&lt;/exception-mapping&gt;</code></pre>
+</global-exception-mappings>
+
+<h4 id="谈一下你的项目选择Struts2的理由？"><a href="#谈一下你的项目选择Struts2的理由？" class="headerlink" title="谈一下你的项目选择Struts2的理由？"></a>谈一下你的项目选择Struts2的理由？</h4><p>①Action是POJO类，没有依赖Servlet API，具有良好的可测试性；</p>
+<p>②强大的拦截器，简化了开发的复杂度；</p>
+<p>③支持多种表现层技术：JSP、Freemarker等；</p>
+<p>④灵活的验证方式；</p>
+<p>⑤国际化(I18N)支持</p>
+<p>⑥声明式异常管理；</p>
+<p>⑦通过JSON插件简化Ajax；</p>
+<p>⑧通过Spring插件跟Spring整合；</p>
+<h4 id="阐述Struts2中的Action如何编写，是否采用单例？"><a href="#阐述Struts2中的Action如何编写，是否采用单例？" class="headerlink" title="阐述Struts2中的Action如何编写，是否采用单例？"></a>阐述Struts2中的Action如何编写，是否采用单例？</h4><p>（1）Struts2的Action有三种写法：</p>
+<pre><code>       ①POJO类——无继承无实现；
+
+       ②实现Action接口，重写execute()方法;
+
+       ③继承ActionSupport(常用)；</code></pre>
+<p>（2）Action没有像Servlet一样，使用单实例多线程的工作方式，很明显，每一个Action要接收不同用户的请求参数，这就意味着Action是有状态的，因此在设计上使用了，每一个请求对应一个Action的处理方式，所以是多例的。</p>
+]]></content>
+      <categories>
+        <category>后端</category>
+        <category>struts</category>
+      </categories>
+      <tags>
+        <tag>面试题</tag>
+        <tag>struts</tag>
+      </tags>
+  </entry>
 </search>
