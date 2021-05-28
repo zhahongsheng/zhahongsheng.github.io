@@ -556,7 +556,7 @@
       </tags>
   </entry>
   <entry>
-    <title>阻塞队列介绍</title>
+    <title>SSM整合Druid</title>
     <url>/2021/05/28/SSM%E9%A1%B9%E7%9B%AE%E6%95%B4%E5%90%88druid%E7%9B%91%E6%8E%A7/</url>
     <content><![CDATA[<p>本文主要介绍了一下阿里巴巴开源平台上的数据库连接池Druid，并介绍了SSM项目如何整合Druid实现前端页面监控web应用后台！</p>
 <a id="more"></a>
