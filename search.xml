@@ -586,4 +586,48 @@
         <tag>Druid</tag>
       </tags>
   </entry>
+  <entry>
+    <title>IDEA热部署插件Jrebel安装使用</title>
+    <url>/2021/06/21/IDEA%E7%83%AD%E9%83%A8%E7%BD%B2%E6%8F%92%E4%BB%B6Jrebel%E5%AE%89%E8%A3%85%E4%BD%BF%E7%94%A8/</url>
+    <content><![CDATA[<p>JRebel是一套JavaEE开发工具，可快速实现热部署，节省大量项目重启时间，极大提高开发者的开发效率。JRebel是一款Java虚拟机插件，可以使程序员在不进行重新部署的情况下，及时的看到代码的改变对应用程序的影响。可以使开发者及时分别看到代码、类和资源的变化，也可以让开发者一个个地上传而不是一次性全部部署。</p>
+<a id="more"></a>
+
+<h3 id="JRebel介绍"><a href="#JRebel介绍" class="headerlink" title="JRebel介绍"></a>JRebel介绍</h3><ol>
+<li>JRebel是一款jvm插件，可以使java代码修改后不用重启系统，及时生效。</li>
+<li>IDEA上远程是不支持热部署的，一般更新java文件或者资源文件后需要重启Tomcat服务器才能生效</li>
+<li>JRebel是目前idea热部署最后的解决方案</li>
+</ol>
+<h3 id="JRebel的安装"><a href="#JRebel的安装" class="headerlink" title="JRebel的安装"></a>JRebel的安装</h3><p>1.安装插件：</p>
+<p><img src="http://qiniu.zhahongsheng.top//image/image-20210621210708976.png" alt="image-20210621210708976"></p>
+<p>2.激活JRebel</p>
+<p>​    2.1 在线生成GUID，网址：<a href="https://www.guidgen.com/">在线生成GUID</a>，若当前的GUID失效，重新生成一个即可<img src="http://qiniu.zhahongsheng.top//image/image-20210621211054379.png" alt="image-20210621211054379"></p>
+<p>​    2.2 在IDEA中是使用刚才生成的GUID激活JRebel。直接使用前面生成的GUID替换下方的GUID，并输入自己的邮箱，即可直接激活。    <img src="http://qiniu.zhahongsheng.top//image/image-20210621211452135.png" alt="image-20210621211452135"></p>
+<p>3 设置JRebel</p>
+<p>3.1进入设置页面，选择JRebel，将JRebel设置为离线模式。<img src="http://qiniu.zhahongsheng.top//image/image-20210621211742929.png" alt="image-20210621211742929"></p>
+<p>设置完成后显示如下：<img src="http://qiniu.zhahongsheng.top//image/image-20210621211824844.png" alt="image-20210621211824844"></p>
+<p>3.2 设置自动编译</p>
+<p>若要实现热部署，光实现上面步骤还是不够的，还需要对IDEA进行如下设置</p>
+<p>​    1.由于JRebel是实时监控class文件的变化来实现热部署的，所以在idea环境下需要打开自动编译的功能才能实现实时修改，实时生效。<img src="http://qiniu.zhahongsheng.top//image/image-20210621212613715.png" alt="image-20210621212613715"></p>
+<ol start="2">
+<li><p>打开运行时编译</p>
+<p>快捷键ctrl+shift+A，搜索：registry<img src="http://qiniu.zhahongsheng.top//image/image-20210621212745684.png" alt="image-20210621212745684"></p>
+<p><img src="http://qiniu.zhahongsheng.top//image/image-20210621212841488.png" alt="image-20210621212841488"></p>
+</li>
+</ol>
+<p>以上设置完成后，在启动项目的时候就可以直接选择JRebel启动项目，分别有两种模式，一种是run，另一种是debug。在选择对应的模式启动完了之后，若是java文件或者资源文件有变化的情况下，直接按快捷键<strong>Ctrl + Shift + F9</strong>即可完成编译。</p>
+<p>4.一般问题：</p>
+<p>很多情况下，我们在按快捷键进行热部署的时候会报一个一下错误：<img src="http://qiniu.zhahongsheng.top//image/image-20210621213428623.png" alt="image-20210621213428623"></p>
+<p>像这种一般编译器在处理一些注解或者是依赖的时候，无法解析。只需要在idea中对VM进行设置一下就可以了。</p>
+<p>在 setting –&gt; Compiler 中的vm选项加入：-Djps.track.ap.dependencies=false</p>
+<p><img src="http://qiniu.zhahongsheng.top//image/image-20210621213745962.png" alt="image-20210621213745962"></p>
+]]></content>
+      <categories>
+        <category>后端</category>
+        <category>工具 热部署</category>
+      </categories>
+      <tags>
+        <tag>工具</tag>
+        <tag>JRebel</tag>
+      </tags>
+  </entry>
 </search>
