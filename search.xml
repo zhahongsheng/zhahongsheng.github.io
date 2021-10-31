@@ -678,4 +678,113 @@
         <tag>node</tag>
       </tags>
   </entry>
+  <entry>
+    <title></title>
+    <url>/2021/10/31/VS%20CODE%E4%BD%BF%E7%94%A8%E7%AE%80%E4%BB%8B/</url>
+    <content><![CDATA[<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">title: VS CODE使用简介</span><br><span class="line">date: 2021-10-31 21:31:05</span><br><span class="line">tags:</span><br><span class="line">    - 工具</span><br><span class="line">categories: </span><br><span class="line">    - 前端</span><br></pre></td></tr></table></figure>
+<p>本文主要介绍高并发中变量的可见性问题</p>
+<a id="more"></a>
+
+<h3 id="VS-CODE快捷键"><a href="#VS-CODE快捷键" class="headerlink" title="VS CODE快捷键"></a>VS CODE快捷键</h3><h4 id="Windows："><a href="#Windows：" class="headerlink" title="Windows："></a>Windows：</h4><table>
+<thead>
+<tr>
+<th>说明</th>
+<th>快捷键</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>根据您当前的上下文访问所有可用命令</td>
+<td>Ctrl + Shift + P</td>
+</tr>
+<tr>
+<td>快速打开文件</td>
+<td>Ctrl + p</td>
+</tr>
+<tr>
+<td>打开用户设置</td>
+<td>Ctrl +，</td>
+</tr>
+<tr>
+<td>集成终端</td>
+<td>Ctrl +`</td>
+</tr>
+<tr>
+<td>多光标选择</td>
+<td>Alt +单击</td>
+</tr>
+<tr>
+<td>为所有的相同实例添加光标</td>
+<td>Ctrl + Shift + L</td>
+</tr>
+<tr>
+<td>逐个选取下一个匹配项</td>
+<td>Ctrl + d</td>
+</tr>
+<tr>
+<td>上下移动</td>
+<td>Alt +↑ 或 Alt +↓</td>
+</tr>
+</tbody></table>
+<h4 id="macOS："><a href="#macOS：" class="headerlink" title="macOS："></a>macOS：</h4><table>
+<thead>
+<tr>
+<th>说明</th>
+<th>快捷键</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>新建文件</td>
+<td>Command+N</td>
+</tr>
+<tr>
+<td>关闭窗口</td>
+<td>command+W</td>
+</tr>
+<tr>
+<td>快速打开文件</td>
+<td>command+P</td>
+</tr>
+<tr>
+<td>全局查找</td>
+<td>command+shift+f</td>
+</tr>
+<tr>
+<td>全局替换</td>
+<td>command+shift+h</td>
+</tr>
+<tr>
+<td>查看和修改用户配置</td>
+<td>command+，：</td>
+</tr>
+</tbody></table>
+<h3 id="常用插件"><a href="#常用插件" class="headerlink" title="常用插件"></a>常用插件</h3><table>
+<thead>
+<tr>
+<th>插件介绍</th>
+<th>插件</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>文件图标插件</td>
+<td>vscode-icons</td>
+</tr>
+<tr>
+<td>引入文件和书写文件路径时，可自动填充文件</td>
+<td>Path Intellisense</td>
+</tr>
+<tr>
+<td>修改HTML标签时，自动完成闭合标签的同步修改</td>
+<td>Auto Rename Tag</td>
+</tr>
+<tr>
+<td>查看文件在什么时候被谁修改过，以及这个文件被多少人修改过</td>
+<td>GitLens</td>
+</tr>
+<tr>
+<td>将VS Code的所有配置通过GitHub同步，使得不同计算机上面的VS Code配置一致</td>
+<td>Setting Sync</td>
+</tr>
+</tbody></table>
+]]></content>
+  </entry>
 </search>
