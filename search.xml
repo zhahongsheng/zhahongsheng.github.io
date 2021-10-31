@@ -630,4 +630,52 @@
         <tag>JRebel</tag>
       </tags>
   </entry>
+  <entry>
+    <title>node常用工具</title>
+    <url>/2021/10/31/Node%E5%B8%B8%E7%94%A8%E5%B7%A5%E5%85%B7/</url>
+    <content><![CDATA[<p>下列文章主要是介绍node的一些常用工具，以及这些工具间的一些优缺点。</p>
+<a id="more"></a>
+
+<h3 id="NPM"><a href="#NPM" class="headerlink" title="NPM"></a>NPM</h3><ol>
+<li>初始化node项目，生成package.json文件：npm init</li>
+<li>查看本地安装目录 npm root</li>
+<li>安装本地依赖包：npm install</li>
+<li>安装本地依赖包并保存到package.json文件中：npm install –save</li>
+<li>安装开发依赖包并保存到package.json文件中：npm install –save-dev</li>
+<li>更新本地依赖包：npm update</li>
+<li>查看本地依赖包：npm ls</li>
+<li>卸载本地依赖包：npm uninstall</li>
+<li>查看全局安装目录：npm root -g</li>
+<li>安装全局依赖包：npm install -g</li>
+<li>更新全局依赖包：npm update -g</li>
+<li>查看全局依赖包：npm ls -g</li>
+<li>卸载全局依赖包：npm uninstall -g</li>
+<li>查看依赖包信息：npm info</li>
+<li>执行scripts配置命令：npm run</li>
+</ol>
+<h3 id="CNPM"><a href="#CNPM" class="headerlink" title="CNPM"></a>CNPM</h3><p>npm安装包是从国外服务器上下载的，受网路影响因素较大，可能会出现异常。因此国内的淘宝团队同步npm，实现了npm的国内源。可以在使用npm安装包时配置淘宝的国内源。命令如下：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">npm --registry&#x3D;https:&#x2F;&#x2F;registry.npm.taobao.org	</span><br></pre></td></tr></table></figure>
+<h3 id="NRM"><a href="#NRM" class="headerlink" title="NRM"></a>NRM</h3><p>如果想要使用一些其他非淘宝的镜像源，还可以安装一款名为NRM的镜像源管理工具，命令如下：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">npm install -g nrm</span><br></pre></td></tr></table></figure>
+<p>然后可以通过命令查看所有可用的镜像源，命令如下：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">nrm ls</span><br></pre></td></tr></table></figure>
+<p><img src="http://qiniu.zhahongsheng.top//image/image-20211031201102896.png" alt="image-20211031201102896"></p>
+<p>最后设置自己想用的镜像源即可：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">nrm use cnpm	</span><br></pre></td></tr></table></figure>
+<h3 id="YARN"><a href="#YARN" class="headerlink" title="YARN"></a>YARN</h3><p>yarn是Facebook等公司开发用于替换npm的包管理工具，相对于npm有以下优势：</p>
+<ul>
+<li>速度超快：yarn缓存过每个曾经下载过的包，所以再次使用的时候无需重复下载。同时在下载的过程中使用并行下载使资源利用率最大化</li>
+<li>超级安全：在代码执行前，yarn会通过算法校验每个安装包的完整性</li>
+<li>超级可靠：使用详细、简洁的锁文件格式和明确的安装依赖包的算法。能保证在不同系统上无差异的工作</li>
+</ul>
+]]></content>
+      <categories>
+        <category>前端</category>
+        <category>工具 node</category>
+      </categories>
+      <tags>
+        <tag>工具</tag>
+        <tag>node</tag>
+      </tags>
+  </entry>
 </search>
